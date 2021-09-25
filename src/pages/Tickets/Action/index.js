@@ -166,16 +166,16 @@ const Action = ({ navigation, route }) => {
                                                 {Permission.includes('action_show') &&
                                                     <BtnDetail onPress={() => navigation.navigate('ViewAction', { action: item })} />
                                                 }
-                                                {Permission.includes('action_staff_access') &&
+                                                {(item.status != 'close' && Permission.includes('action_staff_access')) &&
                                                     <BtnEdit onPress={() => navigation.navigate('EditAction', { action: item })} />
                                                 }
-                                                {Permission.includes('action_delete') &&
+                                                {(item.status != 'close' && Permission.includes('action_delete')) &&
                                                     <BtnDelete onPress={() => handleDelete(item.id)} />
                                                 }
-                                                {Permission.includes('action_show') &&
+                                                {(item.status != 'close' && Permission.includes('action_show')) &&
                                                     <BtnStaff onPress={() => navigation.navigate('StaffAction', { action_id: item.id })} />
                                                 }
-                                                {Permission.includes('action_staff_edit') &&
+                                                {(item.status != 'close' && Permission.includes('action_staff_edit')) &&
                                                     <BtnEditStatus onPress={() => navigation.navigate('EditActionStatus', {item : item})} />
                                                 }
                                                 

@@ -25,14 +25,18 @@ const ButtonImage =  (props) => {
         myloop.push(
             <View key={index} >
                 {/* <Text onPress={()=>console.log(props.imagePengerjaan[index].uri)}>{props.test}</Text> */}
+                
                 <View  style={{marginVertical:10,  height : 200, alignItems : 'center'}}>
+                    <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{width:'100%', height: 200, alignItems:'center'}} >
                     {/* <Text>{props.oldImage[index]}</Text> */}
                     <Image
                         style={{width:'90%', height: 200}}
                         // source={props.dataImage[index]==null ? require('../../../assets/img/ImageFoto.png') :{uri: props.dataImage[index].uri}}
                         source={props.imagePengerjaan[index].uri=='' ? require('../../../assets/img/ImageFoto.png') : ({uri : props.imagePengerjaan[index].from == 'local' ? props.imagePengerjaan[index].uri : Config.REACT_APP_BASE_URL + `${String(props.imagePengerjaan[index].uri).replace('public/', '')}?time="${new Date()}` })}
                     />
-                </View> 
+                      </ImageBackground> 
+                </View>
+              
                 {props.imagePengerjaan[index].uri== '' &&
                     <View style={{alignItems : 'center'}}>
                     <Button
@@ -602,11 +606,14 @@ const editstatus = ({navigation, route}) => {
                                     {form.status != 'close' &&
                                     <View>
                                     <Txt title ='Foto Sebelum Pengerjaan'/>
+
                                     <View style={{alignItems:'center'}}>
+                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
                                             <Image
                                                 style={{width:'90%', height: 200}}
-                                                source={response_prework.uri=='' || response_prework.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? response_prework.uri : Config.REACT_APP_BASE_URL + `${String(response_prework.uri).replace('public/', '')}?time="${new Date()}`}}
+                                                source={response_prework.uri=='' || response_prework.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: response_prework.from=='local' ? response_prework.uri : Config.REACT_APP_BASE_URL + `${String(response_prework.uri).replace('public/', '')}?time="${new Date()}`}}
                                             />
+                                              </ImageBackground> 
                                             <Distance distanceV={10}/>
                                             <Button
                                                 onPress={() => launchCamera(
@@ -631,14 +638,16 @@ const editstatus = ({navigation, route}) => {
                                                 backgroundColor='#1DA0E0'
                                                 icon = {<FontAwesomeIcon icon={faCamera} color='#ffffff'/>}
                                             />
-                                        
+                                      
                                     </View>
                                         <Txt title ='Foto Alat Pengerjaan'/>
                                         <View style={{alignItems:'center'}}>
+                                        <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{width:'100%', height: 200, alignItems:'center'}} >
                                             <Image
                                                 style={{width:'90%', height: 200}}
-                                                source={responses_tools.uri=='' || response_prework.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : Config.REACT_APP_BASE_URL + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
+                                                source={responses_tools.uri=='' || responses_tools.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : Config.REACT_APP_BASE_URL + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
                                             />
+                                        </ImageBackground> 
                                             <Distance distanceV={10}/>
                                             <Button
                                                 onPress={() => launchCamera(
