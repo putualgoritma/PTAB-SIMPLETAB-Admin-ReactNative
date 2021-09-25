@@ -27,7 +27,7 @@ const ButtonImage =  (props) => {
                 {/* <Text onPress={()=>console.log(props.imagePengerjaan[index].uri)}>{props.test}</Text> */}
                 
                 <View  style={{marginVertical:10,  height : 200, alignItems : 'center'}}>
-                    <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{width:'100%', height: 200, alignItems:'center'}} >
+                    <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
                     {/* <Text>{props.oldImage[index]}</Text> */}
                     <Image
                         style={{width:'90%', height: 200}}
@@ -642,7 +642,7 @@ const editstatus = ({navigation, route}) => {
                                     </View>
                                         <Txt title ='Foto Alat Pengerjaan'/>
                                         <View style={{alignItems:'center'}}>
-                                        <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{width:'100%', height: 200, alignItems:'center'}} >
+                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
                                             <Image
                                                 style={{width:'90%', height: 200}}
                                                 source={responses_tools.uri=='' || responses_tools.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : Config.REACT_APP_BASE_URL + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
