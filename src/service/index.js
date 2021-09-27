@@ -15,6 +15,7 @@
       const ticktes =(token) => Get('/api/close/admin/tickets', false, token)      
       const actionStaffs =(data, token) => Get(`/api/close/admin/actionStaffs/${data}`, false, token)
       const actionStaffLists =(data, token) => Get(`/api/close/admin/actionStaffLists/${data}`, false, token)
+      const defcustomer =(token) => Get('/api/close/admin/defcustomer', false, token)
 
       //POST
       const staffslist =(data,token) => Post('/api/close/admin/staffs/list', false, data, token)
@@ -92,7 +93,8 @@
             subdapertementsEdit,
             dapertementsuser,
             categorygroupList,
-            categorytypeList
+            categorytypeList,
+            defcustomer
       }
 
       export default API;
