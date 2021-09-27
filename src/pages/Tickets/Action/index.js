@@ -141,7 +141,7 @@ const Action = ({ navigation, route }) => {
                                         <View style={{ flexDirection: 'row' }}>
                                             <View style={{ flex: 1, height: 150, paddingTop: 3, justifyContent:'center', alignItems:'center'}}>
                                             {/* {loadingImage && <Image source={require('../../../assets/img/ImageFoto.png')} style={{ width: 10, height: 10 }} /> } */}
-                                               <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{ width: 120, height: 150 }} >
+                                               <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ width: 120, height: 150 }} >
                                                 <Image
                                                     // source={loadingImage == false ? { uri: Config.REACT_APP_BASE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}` } : require('../../../assets/img/ImageFoto.png')  }
                                                     source={{ uri: Config.REACT_APP_BASE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}` }  }

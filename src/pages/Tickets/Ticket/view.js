@@ -82,7 +82,7 @@ url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="$
                                     <TouchableHighlight onPress ={() =>{ setShowImage(true);console.log(images);}}>
                                     <ScrollView style={{flexDirection:'row',}}horizontal={true}>
                                     {/* {loadingImage && <Text style={{textAlign : 'center', fontSize : 17}}>Image Is Loading...</Text>} */}
-                                    <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{ height : 220, width : 280}} >
+                                    <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ height : 220, width : 280}} >
                                     {
                                         imageTicket.map((item, index) => {
                                             return (
@@ -119,8 +119,8 @@ url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="$
                                     {/* <Text style={{fontSize:16, color:'#696969'}}>Bukti Foto Pengerjaan :</Text> */}
                                     {/* {ticket.action[0] &&
                                     <Image
-                                    key={ticket.action[0].image.length > 0 ? Config.REACT_APP_BASE_URL + `${String(imagepengerjaan).replace('public/', '')}` : require('../../../assets/img/ImageFotoLoading.png')}
-                                        source={ticket.action[0].image.length > 0?{ uri: Config.REACT_APP_BASE_URL + `${String(imagepengerjaan).replace('public/', '')}`} : require('../../../assets/img/ImageFotoLoading.png') }
+                                    key={ticket.action[0].image.length > 0 ? Config.REACT_APP_BASE_URL + `${String(imagepengerjaan).replace('public/', '')}` : require('../../../assets/img/ImageLoading.gif')}
+                                        source={ticket.action[0].image.length > 0?{ uri: Config.REACT_APP_BASE_URL + `${String(imagepengerjaan).replace('public/', '')}`} : require('../../../assets/img/ImageLoading.gif') }
                                         style={{ height : 220, width : 280 }} 
                                         // onLoadEnd={() => setLoadingImage(false)}
                                         // onLoadStart={() => setLoadingImage(true)}
@@ -142,7 +142,7 @@ url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="$
                                     <View style={{width:'90%'}}>
                                         <TouchableHighlight onPress ={imagePengerjaan != null ? () =>{ setShowImagePengerjaan(true);} : null}>
                                         <ScrollView style={{flexDirection:'row',}}horizontal={true}>
-                                        <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{ height : 220, width : 280}} >
+                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ height : 220, width : 280}} >
                                             {imagePengerjaan && imagePengerjaan.map((item,index) => {
                                                     return (
                                                         <View style={{marginVertical:5}}>

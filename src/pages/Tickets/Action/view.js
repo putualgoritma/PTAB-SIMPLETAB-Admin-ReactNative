@@ -73,7 +73,7 @@ const ViewAction =({navigation, route})=>{
                                     <ScrollView style={{flexDirection:'row',}}horizontal={true}>
 
                                     {/* {loadingImage && <Text style={{textAlign : 'center', fontSize : 17}}>Image Is Loading...</Text>} */}
-                                    <ImageBackground source={require('../../../assets/img/ImageFotoLoading.png') } style={{ height : 220, width : 280}} >
+                                    <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ height : 220, width : 280}} >
                                     {
                                         // action.image != null ?
                                         imageAction.map((item, index) => {
