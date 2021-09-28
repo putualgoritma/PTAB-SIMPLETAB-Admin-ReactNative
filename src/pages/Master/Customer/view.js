@@ -19,7 +19,7 @@ const ViewCustomer =({navigation, route})=>{
                                     <DataView title='Nama Lengkap' txt={customer.name}  />
                                     <DataView title='Email' txt={customer.email}/>
                                     <DataView title='Alamat' txt={customer.address} />
-                                    <DataView title='Jenis Kelamin' txt={customer.gender == 'male' ? 'Laki - Laki' : 'Perempuan'}/>
+                                    <DataView title='Jenis Kelamin' txt={customer.gender}/>
                                     <DataView title='Tipe' txt={customer.type == 'customer' ? 'Pelanggan' : 'Umum'}/>
                                     <DataView title='Telepon' txt={customer.phone}/>
                                 </View>
