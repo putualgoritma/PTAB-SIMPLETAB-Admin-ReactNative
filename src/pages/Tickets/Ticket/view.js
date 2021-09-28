@@ -5,6 +5,7 @@ import {HeaderView,DataView,Footer,Title} from '../../../component'
 import VideoPlayer from '../../../component/Video'
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { faMapMarked } from '@fortawesome/free-solid-svg-icons'
+import { Distance } from '../../../utils'
 
 
 const ViewTicket =({navigation, route})=>{
@@ -21,11 +22,24 @@ const ViewTicket =({navigation, route})=>{
 
     // const imagepengerjaan = ticket.action.length > 0 ? (JSON.parse(ticket.action[0].image)[0]) : null
     const [imagesPengerjaan, setImagesPengerjaan] = useState([]);
+    const [imagesDone, setImagesDone] = useState([]);
+    const [imagesPrework, setImagesPrework] = useState([]);
+    const [imagesTools, setImagesTools] = useState([]);
     const [panjang,setPanjang]= useState(ticket.action.length) ;
     const [ShowImagePengerjaan, setShowImagePengerjaan] = useState(false)
+    const [ShowImageDone, setShowImageDone] = useState(false)
+    const [ShowImagePrework, setShowImagePrework] = useState(false)
+    const [ShowImageTools, setShowImageTools] = useState(false)
     // JSON.parse(ticket.action[panjang-1].image) : null
     const [imagePengerjaan,setimagePengerjaan] = useState(ticket.action.length > 0 ? (ticket.action[panjang-1].image != null && ticket.action[panjang-1].image !='' ?    JSON.parse(ticket.action[panjang-1].image) : null) : null )
-    
+    const [imageDone,setimageDone] = useState(ticket.action.length > 0 ? (ticket.action[panjang-1].image_done != null && ticket.action[panjang-1].image_done !='' ?    JSON.parse(ticket.action[panjang-1].image_done) : null) : null )
+    const [imagePrework, setImagePrework] = useState (ticket.action.length > 0 ? ticket.action[panjang-1].image_prework : null)
+    const [imageTools, setImageTools] = useState (ticket.action.length > 0 ? ticket.action[panjang-1].image_tools : null)
+
+    //  console.log('uriii',Config.REACT_APP_BASE_URL + `${String(imagePrework).replace('public/', '')}`)
+   
+    // console.log('data foto pre',imagePrework)
+
     useEffect(() => {
        imageTicket.map((item, index) => {
            images.push({
@@ -41,13 +55,51 @@ const ViewTicket =({navigation, route})=>{
         console.log(imageTicket);
     }, [])
 
+
+   
+    useEffect(() => {
+        if(imagePrework != null){
+       
+              imagesPrework.push({
+        url: Config.REACT_APP_BASE_URL + `${String(imagePrework).replace('public/', '')}?time="${new Date()}`,
+              })
+
+   
+        }
+         setLoading(false)
+      }, [])
+
+      useEffect(() => {
+        if(imageTools != null){
+       
+              imagesTools.push({
+        url: Config.REACT_APP_BASE_URL + `${String(imageTools).replace('public/', '')}?time="${new Date()}`,
+              })
+
+   
+        }
+         setLoading(false)
+      }, [])
     
 
     useEffect(() => {
         if(imagePengerjaan != null){
           imagePengerjaan.map((item, index) => {
               imagesPengerjaan.push({
-url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="${new Date()}`,
+        url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="${new Date()}`,
+              })
+          })
+   
+        }
+         setLoading(false)
+      }, [])
+
+    
+      useEffect(() => {
+        if(imageDone != null){
+          imageDone.map((item, index) => {
+              imagesDone.push({
+        url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="${new Date()}`,
               })
           })
    
@@ -97,25 +149,34 @@ url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="$
                                         })
                                     }
                                     </ImageBackground>
+                                   
+
+                                   
                                     </ScrollView> 
                                     </TouchableHighlight> 
-                                    <DataView title='Bukti Video Keluhan' />
-                                    <View style={{height : 250, width :'100%'}}>
+                                    {ticket.video !='' && 
+                                        <View>
+                                        <DataView title='Bukti Video Keluhan' />
                                         
-                                        {ticket.video !='' && 
-                                            <VideoPlayer
-                                                src={{uri :  Config.REACT_APP_BASE_URL + `${String(ticket.video).replace('public/', '')}` }}
-                                                onFullScreen = {()=> setOnFullScreen(true)}
-                                                onLoad={() => {setLoadingVideo(loadingVideo ? false : true); return loadingVideo}} 
+                                        <View style={{height : 250, width :'100%'}}>
+                                            
+                                            {ticket.video !='' && 
+                                                <VideoPlayer
+                                                    src={{uri :  Config.REACT_APP_BASE_URL + `${String(ticket.video).replace('public/', '')}` }}
+                                                    onFullScreen = {()=> setOnFullScreen(true)}
+                                                    onLoad={() => {setLoadingVideo(loadingVideo ? false : true); return loadingVideo}} 
+                                                />
+                                            }
+                                            {ticket.video =='' && 
+                                            <Image 
+                                                    style={{height : 220, width : 280, marginVertical : 10}} 
+                                                    source = {require('../../../assets/img/ImageVideo.png')}
                                             />
-                                        }
-                                        {ticket.video =='' && 
-                                           <Image 
-                                                style={{height : 220, width : 280, marginVertical : 10}} 
-                                                source = {require('../../../assets/img/ImageVideo.png')}
-                                           />
-                                        }
+                                            }
+                                        </View>
                                     </View>
+                                    }
+                                    
                                     {/* <Text style={{fontSize:16, color:'#696969'}}>Bukti Foto Pengerjaan :</Text> */}
                                     {/* {ticket.action[0] &&
                                     <Image
@@ -128,11 +189,42 @@ url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="$
                                 } */}
 
                                     {/* <Text onPress={()=>console.log('data ticket ini',ticket.action[0].image)}>Test</Text> */}
-
+                            {ticket.status !='pending' && 
+                                <View>
                                     <DataView title='Memo Pengerjaan' txt={ticket.action.length >0 ? ticket.action[panjang-1].memo : null}/>
-
+                                    <DataView title='Foto Sebelum'/>
+                                        <Modal visible={ShowImagePrework} transparent={true} enablePreload={true}
+                                            onRequestClose={() => setShowImagePrework(false)}
+                                            onDoubleClick={() => setShowImagePrework(true)}
+                                        >
+                                            <ImageViewer imageUrls={imagesPrework}/>
+                                        </Modal>
+                                        <TouchableHighlight onPress ={imagePrework != null ? () =>{ setShowImagePrework(true);} : null}>
+                                            <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ height : 220, width : 280}} >
+                                                <Image 
+                                                    style={{height : 220, width : 280, marginVertical : 10}} 
+                                                    source = {{uri : Config.REACT_APP_BASE_URL + `${String(imagePrework).replace('public/', '')}?time="${new Date()}`}}
+                                                />
+                                            </ImageBackground>
+                                        </TouchableHighlight>
+                                    <Distance distanceV={5}/>
+                                    <DataView title='Foto Alat'/>
+                                    <Modal visible={ShowImageTools} transparent={true} enablePreload={true}
+                                            onRequestClose={() => setShowImageTools(false)}
+                                            onDoubleClick={() => setShowImageTools(true)}
+                                        >
+                                            <ImageViewer imageUrls={imagesTools}/>
+                                        </Modal>
+                                    <TouchableHighlight onPress ={imageTools != null ? () =>{ setShowImageTools(true);} : null}>
+                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ height : 220, width : 280}} >
+                                            <Image 
+                                                style={{height : 220, width : 280, marginVertical : 10}} 
+                                                source = {{uri : Config.REACT_APP_BASE_URL + `${String(imageTools).replace('public/', '')}?time="${new Date()}`}}
+                                            />
+                                        </ImageBackground>
+                                    </TouchableHighlight>
+                                    <Distance distanceV={5}/>
                                     <DataView title='Foto Pengerjaan' />
-
                                     <Modal visible={ShowImagePengerjaan} transparent={true} enablePreload={true}
                                         onRequestClose={() => setShowImagePengerjaan(false)}
                                         onDoubleClick={() => setShowImagePengerjaan(true)}
@@ -162,8 +254,45 @@ url: Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="$
                                         </ScrollView>  
                                         </TouchableHighlight>
                                     </View>
+                                    <Distance distanceV={5}/>
+                                </View>
+                            }
+                            {ticket.status =='close' &&
+                                <View>
+                                    <DataView title='Foto Selesai' />
+                                    <Modal visible={ShowImageDone} transparent={true} enablePreload={true}
+                                        onRequestClose={() => setShowImageDone(false)}
+                                        onDoubleClick={() => setShowImageDone(true)}
+                                    >
+                                        <ImageViewer imageUrls={imagesDone}/>
+                                    </Modal>
+                                    <View style={{width:'90%'}}>
+                                        <TouchableHighlight onPress ={imageDone != null ? () =>{ setShowImageDone(true);} : null}>
+                                        <ScrollView style={{flexDirection:'row',}}horizontal={true}>
+                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ height : 220, width : 280}} >
+                                            {imageDone && imageDone.map((item,index) => {
+                                                    return (
+                                                        <View style={{marginVertical:5}}>
+                                                            
+                                                            <Image
+                                                                key={index}
+                                                                onLoadEnd={() => {setLoadingImage(false); console.log('end');}}
+                                                                source = {{uri : Config.REACT_APP_BASE_URL + `${String(item).replace('public/', '')}?time="${new Date()}`}}
+                                                                style={{height: 220, width: 280, marginRight: 10, resizeMode : 'stretch'}}
+                                                            /> 
+                                                          
+                                                        </View>
+                                                        
+                                                    )
+                                                })} 
+                                        </ImageBackground>
+                                        </ScrollView>  
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+                                }
                                    
-                                    
+                                                                  
                                 </View>
                             </View>
                         </View>
