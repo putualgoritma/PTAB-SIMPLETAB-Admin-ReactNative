@@ -53,17 +53,17 @@ const AddStaff=({navigation, route})=>{
     useEffect(() => {
         let isAmounted = true
         // if(isAmounted){
-        //     actionStaffListsAPi();
+        //     lockStaffListAPi();
         // }
         if (isFocused){
-            actionStaffListsAPi();
+            lockStaffListAPi();
         }
 
     }, [isFocused])
 
 
-    const actionStaffListsAPi = () => {
-        API.actionStaffLists(route.params.action_id, TOKEN).then((result) => {
+    const lockStaffListAPi = () => {
+        API.lockStaffList(route.params.lockaction_id, TOKEN).then((result) => {
             console.log('hasil',result)
             let data = []
             let no = []
@@ -80,7 +80,7 @@ const AddStaff=({navigation, route})=>{
                             data={item} 
                             loading = {loading}
                             navigation={navigation} 
-                            action_id = {route.params.action_id}
+                            lockaction_id = {route.params.lockaction_id}
                             delete={() => handleDelete(item.id)}
                             onPress={() => handleAction(item.id)}
                         />],
@@ -101,15 +101,15 @@ const AddStaff=({navigation, route})=>{
 
     const handleAction =(staff_id) => {
         setLoading(true)
-        API.actionsStaffStore({
-            action_id : route.params.action_id,
+        API.lockStaffStore({
+            lockaction_id : route.params.lockaction_id,
             staff_id : staff_id
         }, TOKEN).then((result)=>{
             if(result.message.constructor === Array){
                 alert( result.message.toString())
             }else{
                 alert(result.message)
-                navigation.navigate('StaffAction', {action_id : route.params.action_id})
+                navigation.navigate('LockStaff', {lockaction_id : route.params.lockaction_id})
             }
             setLoading(false)
         }).catch((e) => {

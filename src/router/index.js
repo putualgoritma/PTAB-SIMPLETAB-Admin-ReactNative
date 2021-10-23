@@ -55,6 +55,11 @@ import SealMeter from '../pages/Seal/Seal'
 import AddSeal from '../pages/Seal/Seal/add'
 import ViewSeal from '../pages/Seal/Seal/view'
 import EditSeal from '../pages/Seal/Seal/edit'
+import AddStaffSeal from '../pages/Seal/Staff/add';
+import LockStaff from '../pages/Seal/Staff';
+import ActionSeal from '../pages/Seal/Action';
+import AddActionSeal from '../pages/Seal/Action/add';
+import ViewActionSeal from '../pages/Seal/Action/view';
 
 const Stack = createStackNavigator();
 const Router = () =>{
@@ -330,10 +335,35 @@ const Router = () =>{
             component={ViewSeal}
             options={{headerShown:false}}
             />
-             <Stack.Screen
+            <Stack.Screen
             name="EditSeal"
             component={EditSeal}
             options={{headerShown:false}}
+            />
+            <Stack.Screen
+             name="AddStaffSeal"
+             component={AddStaffSeal}
+             options={{headerShown:false}}
+            />
+             <Stack.Screen
+             name="LockStaff"
+             component={LockStaff}
+             options={{headerShown:false}}
+            />
+            <Stack.Screen
+             name="ActionSeal"
+             component={ActionSeal}
+             options={{headerShown:false}}
+            />
+             <Stack.Screen
+             name="AddActionSeal"
+             component={AddActionSeal}
+             options={{headerShown:false}}
+            />
+            <Stack.Screen
+             name="ViewActionSeal"
+             component={ViewActionSeal}
+             options={{headerShown:false}}
             />
         </Stack.Navigator>
         )
