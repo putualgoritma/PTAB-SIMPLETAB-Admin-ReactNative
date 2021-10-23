@@ -28,7 +28,7 @@ const TextInfo = (props) => {
     )
 }
 
-const Staff=({navigation, route})=>{
+const SealStaff=({navigation, route})=>{
     const [loading, setLoading] = useState(true)
     const TOKEN = useSelector((state) => state.TokenReducer);
     const isFocused = useIsFocused();
@@ -38,9 +38,9 @@ const Staff=({navigation, route})=>{
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-            API.actionStaffs(route.params.action_id, TOKEN).then((result) => {
-                setStaffs(result.data)
-    
+            API.lockStaffs(route.params.lockaction_id, TOKEN).then((result) => {
+                setStaffs('staff',result.data)
+                console.log(result.data)
                 setLoading(false)
             }).catch((e) => {
                 console.log(e.request);
@@ -62,9 +62,9 @@ const Staff=({navigation, route})=>{
 
 
     const actionStaffListsAPi = () => {
-        API.actionStaffs(route.params.action_id, TOKEN).then((result) => {
+        API.lockStaffs(route.params.lockaction_id, TOKEN).then((result) => {
             setStaffs(result.data)
-
+            console.log('staff',result.data)
             setLoading(false)
         }).catch((e) => {
             console.log(e.request);
@@ -74,13 +74,14 @@ const Staff=({navigation, route})=>{
 
     const handleDelete =(action, staff) => {
         setLoading(true)
-        API.actionStaffDestroy({action_id : action, staff_id : staff}, TOKEN).then((result) => {
-            console.log(result);
+        API.lockStaffDestroy({lockaction_id : action, staff_id : staff}, TOKEN).then((result) => {
+          
             alert(result.data.message)
             actionStaffListsAPi();
             setLoading(false)
         }).catch((e) => {
             console.log(e.request);
+        
             setLoading(false)
         })
     }
@@ -103,7 +104,7 @@ const Staff=({navigation, route})=>{
                                 title="Tambah Staff"
                                 width='60%'
                                 icon={faPlusCircle}
-                                onPress={()=>navigation.navigate('AddStaffAction', {action_id : route.params.action_id})}
+                                onPress={()=>navigation.navigate('AddStaffSeal', {lockaction_id : route.params.lockaction_id})}
                             />
                         }
                         <Distance distanceV={10}/>
@@ -116,16 +117,12 @@ const Staff=({navigation, route})=>{
                                          <Image source={require('../../../assets/img/staff-avatar.jpeg')} style={{width:91,height:140}}/>
                                        </View>
                                        <View style={[styles.textnfo, {flex:1.4}]}>
-                                       {/* <TextInfo title = 'Status' data={item.pivot.status} /> */}
-                                        <TextInfo title = 'Departemen' data={staffs.dapertement.name}/>
+                                        <TextInfo title = 'Departemen' data={item.dapertement.name}/>
                                         <TextInfo title = 'Pegawai' data={item.name}/>
                                        </View>
                                 </View>
                                 <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
                                     <View style={{flexDirection:'row',width:'60%',height:'auto',paddingTop:5}}>
-                                            {/* {Permission.includes('action_staff_edit') &&
-                                                <BtnEditStatus onPress={() => navigation.navigate('EditStaffAction', {action_staff : item, action : staffs})}/>
-                                            } */}
                                             {Permission.includes('action_staff_delete') &&
                                                 <BtnDelete onPress={() => handleDelete(staffs.id, item.id)}/>
                                             }
@@ -174,4 +171,4 @@ const styles = StyleSheet.create({
         color:'#696969'
     }
 })
-export default Staff
+export default SealStaff

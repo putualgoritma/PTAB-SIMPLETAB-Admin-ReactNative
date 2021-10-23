@@ -16,6 +16,9 @@
       const actionStaffs =(data, token) => Get(`/api/close/admin/actionStaffs/${data}`, false, token)
       const actionStaffLists =(data, token) => Get(`/api/close/admin/actionStaffLists/${data}`, false, token)
       const defcustomer =(token) => Get('/api/close/admin/defcustomer', false, token)
+      const lockStaffList =(data, token) => Get(`/api/close/admin/lockStaffList/${data}`, false, token)
+      const lockStaffs =(data, token) => Get(`/api/close/admin/lockStaffs/${data}`, false, token)
+      const lockShow =(data, token) => Get(`/api/close/admin/lockshow/${data}`, false, token)
 
       //POST
       const staffslist =(data,token) => Post('/api/close/admin/staffs/list', false, data, token)
@@ -33,6 +36,10 @@
       const actions =(data, token) => Post(`/api/close/admin/actionlists`, false, data, token)
       const categorygroupList =(data, token) => Post(`/api/close/admin/category-groups/list`, false, data, token)
       const categorytypeList =(data, token) => Post(`/api/close/admin/category-types/list`, false, data, token)
+      const lockList =(data, token) => Post(`/api/close/admin/lock/list`, false, data, token)
+      const lockStaffStore = (data, token) => Post('/api/close/admin/lockStaffStore', false, data, token);
+      const actionslock =(data, token) => Post(`/api/close/admin/actionlocklists`, false, data, token)
+      const lockactionsCreate = (data, token) => Post('/api/close/admin/lockactionscreate', false, data, token);
       // PUT
       const customerEdit = (data, token) => Put(`/api/close/admin/customers/${data.id}`, false, data, token);
       const categoriesEdit = (data, token) => Put(`/api/close/admin/categories/${data.id}`, false, data, token);
@@ -52,6 +59,9 @@
       const ticketsDelete = (id, token) => Delete(`/api/close/admin/tickets/${id}`, false, token);
       const actionsDelete = (id, token) => Delete(`/api/close/admin/actions/${id}`, false, token);
       const actionStaffDestroy = (data, token) => Delete(`/api/close/admin/actionStaffDestroy/${data.action_id}/${data.staff_id}`, false, token);
+      const lockDestroy = (id, token) => Delete(`/api/close/admin/lockdestroy/${id}`, false, token);
+      const lockStaffDestroy = (data, token) => Delete(`/api/close/admin/lockStaffDestroy/${data.lockaction_id}/${data.staff_id}`, false, token);
+      const lockactionsDelete = (id, token) => Delete(`/api/close/admin/lockactionsdestroy/${id}`, false, token);
       const API = {
             login,
             customers,
@@ -94,7 +104,17 @@
             dapertementsuser,
             categorygroupList,
             categorytypeList,
-            defcustomer
+            defcustomer,
+            lockList,
+            lockStaffList,
+            lockStaffs,
+            lockStaffStore,
+            actionslock,
+            lockactionsCreate,
+            lockDestroy,
+            lockStaffDestroy,
+            lockactionsDelete,
+            lockShow,
       }
 
       export default API;
