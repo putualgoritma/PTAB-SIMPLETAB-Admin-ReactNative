@@ -99,7 +99,7 @@ const SealStaff=({navigation, route})=>{
                 <View style={{alignItems:'center', flex : 1}}>
                     <View style={{width:'90%'}}>
                         <Title title='Staff yang Ditugaskan'/>
-                        {Permission.includes('action_staff_create') &&
+                        {Permission.includes('lock_staff_create') &&
                             <BtnAdd
                                 title="Tambah Staff"
                                 width='60%'
@@ -123,7 +123,7 @@ const SealStaff=({navigation, route})=>{
                                 </View>
                                 <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
                                     <View style={{flexDirection:'row',width:'60%',height:'auto',paddingTop:5}}>
-                                            {Permission.includes('action_staff_delete') &&
+                                            {Permission.includes('lock_staff_delete') &&
                                                 <BtnDelete onPress={() => handleDelete(staffs.id, item.id)}/>
                                             }
                                     </View>

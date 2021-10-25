@@ -105,7 +105,7 @@ const ActionSeal = ({ navigation, route }) => {
                 <View style={{ alignItems: 'center', flex: 1 }}>
                     <View style={{ width: '90%' }}>
                         <Title title='Daftar Tindakan' />
-                        {Permission.includes('action_create') &&
+                        {Permission.includes('lock_action_create') &&
                             <BtnAdd
                                 title="Tambah Tindakan"
                                 width='60%'
@@ -169,10 +169,10 @@ const ActionSeal = ({ navigation, route }) => {
                                         <View style={{backgroundColor:'#f4f4f4', width:'100%', height:2, marginVertical:5}}></View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingVertical:5 }}>
                                             <View style={{ flexDirection: 'row', width: '45%', height: 'auto', paddingTop: 5 }}>
-                                                {Permission.includes('action_show') &&
+                                                {Permission.includes('lock_action_show') &&
                                                     <BtnDetail onPress={() => navigation.navigate('ViewActionSeal', { action: item })} />
                                                 }
-                                                {(item.status != 'close' && Permission.includes('action_delete')) &&
+                                                {(item.status != 'close' && Permission.includes('lock_action_delete')) &&
                                                     <BtnDelete onPress={() => handleDelete(item.id)} />
                                                 }
                                              
