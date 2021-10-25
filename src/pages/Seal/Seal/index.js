@@ -201,13 +201,21 @@ const Seal = ({ navigation }) => {
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
                         <View style={{ flexDirection: 'row', width: '95%', height: 'auto', paddingTop: 5 }}>
                         
+                        {Permission.includes('lock_show') &&
                                 <BtnDetail onPress={() => navigation.navigate('ViewSeal',{lockaction_id: item.id })} />
+                        }
+                        {Permission.includes('lock_edit') &&
 
                                 <BtnStaff onPress={() => navigation.navigate('LockStaff',{lockaction_id: item.id })} />
+                        }
+                        {Permission.includes('lock_delete') &&
                          
                                 <BtnDelete onPress={() => handleDelete(item.id, item)} />
+                        }
+                        {Permission.includes('lock_edit') &&
                             
                                 <BtnAction onPress={() => navigation.navigate('ActionSeal', { ticket: item })} />
+                        }
                           
                         </View>
                     </View>
