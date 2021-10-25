@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { ImageBackground, ScrollView, StyleSheet, View,Text } from 'react-native'
-import Config from 'react-native-config'
-import { DataView, Footer, HeaderView, Title, HeaderForm,Spinner} from '../../../component'
-import { Table, TableWrapper, Row } from 'react-native-table-component';
-import { Distance } from '../../../utils';
-import { useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Row, Table } from 'react-native-table-component';
+import { useSelector } from 'react-redux';
+import { DataView, Footer, HeaderForm, Spinner, Title } from '../../../component';
 import API from '../../../service';
+import { Distance } from '../../../utils';
+import { Rupiah } from '../../../utils/Rp';
 
 const ViewSeal =({navigation, route})=>{
     const [tableData, setTableData] = useState([])
@@ -17,23 +17,37 @@ const ViewSeal =({navigation, route})=>{
     const isFocused = useIsFocused();
     const [customer, setCustomer] = useState([]);
     const [recap, setRecap] = useState([]);
-  
-
+   
     useEffect(() => {
         let isAmounted = true
         if (isAmounted) {
             ShowLock();
         }
-
         return () => {
             isAmounted = false;
         }
     }, [isFocused])
 
     const ShowLock = () => {
-            Promise.all([API.lockShow(route.params.lockaction_id, TOKEN)]).then((result) => {
+            Promise.all([API.lockShow(route.params.lock_id, TOKEN)]).then((result) => {
             setCustomer(result[0].data)
             setRecap(result[0][1])
+            
+            result[0][0].map((item, index) => {
+                setTableData((tableData)=>[
+                    ...tableData,
+                    tableData = [index+1,
+                                 item.norekening,
+                                 item.periode,
+                                 item.tanggal,
+                                 item.m3,
+                                 Rupiah(item.wajibdibayar),
+                                 Rupiah(item.sudahbayar),
+                                 Rupiah(item.denda),
+                                 Rupiah(item.sisa)
+                                ],
+                  ]);
+            })
             setLoading(false)
         }).catch((e) => {
             console.log(e.request);
@@ -48,6 +62,7 @@ const ViewSeal =({navigation, route})=>{
             <HeaderForm/>
             <View style={{ paddingLeft: 10, flex: 1 }}>
             <Title title="Info Tunggakan"/>
+                    <DataView title='Tahun Pembayaran' txt={customer.year}/>
                     <DataView title='Nomor Sambungan' txt={customer.nomorrekening}/>
                     <DataView title='Nama Pelanggan' txt={customer.namapelanggan}/>
                     <DataView title='Alamat' txt={customer.alamat}/>
@@ -84,9 +99,9 @@ const ViewSeal =({navigation, route})=>{
             <View style={{ paddingLeft: 10 }} >
                 <Text style={{ fontSize: 19, color: '#696969', fontWeight: 'bold' }}>Jumlah Tunggakan</Text>
                 <Distance distanceV={5} />
-                    <DataView title='1. Tagihan Air' txt={recap.tagihan}/>
-                    <DataView title='2. Denda' txt={recap.denda}/>
-                    <DataView title='Total' txt={recap.total} />
+                    <DataView title='1. Tagihan Air' txt={Rupiah(parseFloat(recap.tagihan))}/>
+                    <DataView title='2. Denda' txt={Rupiah(parseFloat(recap.denda))}/>
+                    <DataView title='Total' txt={Rupiah(parseFloat(recap.total))} />
             </View>
             <Distance distanceV={10} />
         </ScrollView>

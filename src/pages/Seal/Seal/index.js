@@ -62,7 +62,7 @@ const Seal = ({ navigation }) => {
 
     const getData = async () => {
         // console.log(resetData);
-        API.lockList({ 'page': page, status: cari, }, TOKEN).then((result) => {
+        API.lockList({ 'page': page, status: cari, userid: USER.id}, TOKEN).then((result) => {
             console.log('hasil data', result)
             if (page > 1) {
                 setTicket(ticket.concat(result.data.data))
@@ -202,9 +202,9 @@ const Seal = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', width: '95%', height: 'auto', paddingTop: 5 }}>
                         
                         {Permission.includes('lock_show') &&
-                                <BtnDetail onPress={() => navigation.navigate('ViewSeal',{lockaction_id: item.id })} />
+                                <BtnDetail onPress={() => navigation.navigate('ViewSeal',{lock_id: item.id })} />
                         }
-                        {Permission.includes('lock_edit') &&
+                        {Permission.includes('lock_staff_access') &&
 
                                 <BtnStaff onPress={() => navigation.navigate('LockStaff',{lockaction_id: item.id })} />
                         }
@@ -212,7 +212,7 @@ const Seal = ({ navigation }) => {
                          
                                 <BtnDelete onPress={() => handleDelete(item.id, item)} />
                         }
-                        {Permission.includes('lock_edit') &&
+                        {Permission.includes('lock_action_access') &&
                             
                                 <BtnAction onPress={() => navigation.navigate('ActionSeal', { ticket: item })} />
                         }
