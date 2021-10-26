@@ -107,7 +107,6 @@ const AddActionSeal =({navigation, route})=>{
     const [responses, setResponses] = useState([]);
     const [form, setForm] = useState({
         lock_id : route.params.ticket.id,
-        code : '',
         type : '',
         memo :'',
     })
@@ -230,7 +229,7 @@ const AddActionSeal =({navigation, route})=>{
         }
         console.log('dataupload',dataUpload);
 
-        if (form.code != '' && form.memo != '' && form.type != null) {
+        if (form.memo != '' && form.type != null) {
 
             if (send) {
                 setLoading(true)
@@ -276,8 +275,6 @@ const AddActionSeal =({navigation, route})=>{
                                 <View style={styles.boxShadow} >
                                     {/* <Text onPress={()=>console.log(test)}>test</Text> */}
                                     <Title title='Tambah Tindakan ' paddingVertical={5}/>
-                                    <Txt title='Kode:'/>
-                                    <Inpt placeholder='Kode' onChangeText={item => handleForm('code', item)} />
                                     <Txt title='Type:'/>
                                     {types && 
                                         <Select2
