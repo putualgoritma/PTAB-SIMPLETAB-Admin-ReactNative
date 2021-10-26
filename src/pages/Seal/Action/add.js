@@ -10,7 +10,7 @@ import { Btn, Footer, HeaderInput, Inpt, Spinner, Title, Txt, TxtArea } from '..
 import Button from '../../../component/Button';
 import { colors, Distance } from '../../../utils';
 import RNFetchBlob from 'react-native-fetch-blob';
-
+import API from '../../../service';
 
 const ButtonImage = (props) => {
     const [qty, setQty] = useState(1)
@@ -85,9 +85,9 @@ const requestCameraPermission = async () => {
             }
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log("You can use the camera");
+            // console.log("You can use the camera");
         } else {
-            console.log("Camera permission denied");
+            // console.log("Camera permission denied");
         }
     } catch (err) {
         console.warn(err);
@@ -100,7 +100,10 @@ const AddActionSeal =({navigation, route})=>{
     const lockaction = route.params.ticket;
     const TOKEN = useSelector((state) => state.TokenReducer);
     const [loading, setLoading] = useState(false)
-    const [types, setTypes] = useState([{'id' : 'unplug','name' : 'Cabut'},{'id' : 'lock','name' : 'Segel'},{'id' : 'lock_resist','name' : 'Hambatan Segel'},{'id' : 'unplug_resist','name' : 'Hambatan Cabut'}])
+    // const [types, setTypes] = useState([{'id' : 'unplug','name' : 'Cabut'},{'id' : 'lock','name' : 'Segel'},{'id' : 'lock_resist','name' : 'Hambatan Segel'},{'id' : 'unplug_resist','name' : 'Hambatan Cabut'}])
+    const [types, setTypes] = useState([])
+    const [test, setTest] = useState();
+    
     const [responses, setResponses] = useState([]);
     const [form, setForm] = useState({
         lock_id : route.params.ticket.id,
@@ -125,7 +128,29 @@ const AddActionSeal =({navigation, route})=>{
         let isAmounted = true
         if (isAmounted) {
             requestCameraPermission()
-            console.log(form);
+            Promise.all([API.typeShow(route.params.ticket.id, TOKEN)]).then((result) => {
+                if(result[0].data.lockaction == null){
+                    setTypes([{'id' : 'lock_resist','name' : 'Hambatan Segel'},{'id' : 'lock','name' : 'Segel'},])
+                }
+                else if(result[0].data.lockaction.type =="lock_resist"){
+                    setTypes([{'id' : 'lock','name' : 'Segel'}])
+                }
+                else if(result[0].data.lockaction.type =="lock"){
+                    setTypes([{'id' : 'unplug_resist','name' : 'Hambatan Cabut'},{'id' : 'unplug','name' : 'Cabut'}])
+                }
+                else if(result[0].data.lockaction.type =="unplug_resist"){
+                    setTypes([{'id' : 'unplug','name' : 'Cabut'}])
+                }else{
+                    setTypes(null)
+                }
+                setLoading(false)
+            }).catch((e) => {
+                console.log(e.request);
+                setLoading(false)
+            })
+        
+            
+            console.log('tiket',lockaction)
         }
         return () => {
             isAmounted = false
@@ -164,10 +189,10 @@ const AddActionSeal =({navigation, route})=>{
 
 
     const handleData = (position = null) => {
-        console.log('isi form', form);
+        // console.log('isi form', form);
         let dataUpload = [];
         let data = form;
-        console.log('position', data.lat + ' ' + data.lng);
+        // console.log('position', data.lat + ' ' + data.lng);
 
         let message = 'Mohon lengkapi data';
         let send = false;
@@ -205,7 +230,7 @@ const AddActionSeal =({navigation, route})=>{
         }
         console.log('dataupload',dataUpload);
 
-        if (form.code != '' && form.memo != '') {
+        if (form.code != '' && form.memo != '' && form.type != null) {
 
             if (send) {
                 setLoading(true)
@@ -223,7 +248,7 @@ const AddActionSeal =({navigation, route})=>{
                 ).then((result) => {
                     setLoading(false)
                     let data = JSON.parse(result.data);
-                    console.log(data);
+                    // console.log(data);
                     alert(data.message)
                     navigation.navigate('ActionSeal', { ticket: route.params.ticket })
                 }).catch((e) => {
@@ -249,6 +274,7 @@ const AddActionSeal =({navigation, route})=>{
                         <View style={{width:'90%'}}>
                             <View style={styles.baseBoxShadow} >
                                 <View style={styles.boxShadow} >
+                                    {/* <Text onPress={()=>console.log(test)}>test</Text> */}
                                     <Title title='Tambah Tindakan ' paddingVertical={5}/>
                                     <Txt title='Kode:'/>
                                     <Inpt placeholder='Kode' onChangeText={item => handleForm('code', item)} />

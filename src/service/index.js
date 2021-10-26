@@ -19,6 +19,7 @@
       const lockStaffList =(data, token) => Get(`/api/close/admin/lockStaffList/${data}`, false, token)
       const lockStaffs =(data, token) => Get(`/api/close/admin/lockStaffs/${data}`, false, token)
       const lockShow =(data, token) => Get(`/api/close/admin/lockshow/${data}`, false, token)
+      const typeShow =(data, token) => Get(`/api/close/admin/typeshow/${data}`, false, token)
 
       //POST
       const staffslist =(data,token) => Post('/api/close/admin/staffs/list', false, data, token)
@@ -115,6 +116,7 @@
             lockStaffDestroy,
             lockactionsDelete,
             lockShow,
+            typeShow
       }
 
       export default API;
