@@ -12,6 +12,7 @@ import BtnDelete from './Action/Delete'
 import BtnEdit from './Action/Edit'
 import BtnAction from './Action/Actions'
 import BtnStaff from './Action/Staff'
+import BtnContinue from './Action/Continue'
 import Footer from './Footer'
 import Inpt from './Input'
 import Txt from './Text'
@@ -56,4 +57,5 @@ export{
     Searchable,
     Spinner,
     BtnEditStatus,
+    BtnContinue
 }
