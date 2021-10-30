@@ -60,6 +60,9 @@ import LockStaff from '../pages/Seal/Staff';
 import ActionSeal from '../pages/Seal/Action';
 import AddActionSeal from '../pages/Seal/Action/add';
 import ViewActionSeal from '../pages/Seal/Action/view';
+import MenuSeal from '../pages/Seal/Menu';
+import Arrears from '../pages/Seal/Arrears';
+import AddArrears from '../pages/Seal/Arrears/add';
 
 const Stack = createStackNavigator();
 const Router = () =>{
@@ -363,6 +366,21 @@ const Router = () =>{
             <Stack.Screen
              name="ViewActionSeal"
              component={ViewActionSeal}
+             options={{headerShown:false}}
+            />
+            <Stack.Screen
+             name="MenuSeal"
+             component={MenuSeal}
+             options={{headerShown:false}}
+            />
+            <Stack.Screen
+             name="Arrears"
+             component={Arrears}
+             options={{headerShown:false}}
+            />
+             <Stack.Screen
+             name="AddArrears"
+             component={AddArrears}
              options={{headerShown:false}}
             />
         </Stack.Navigator>

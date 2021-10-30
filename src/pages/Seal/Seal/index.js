@@ -63,7 +63,7 @@ const Seal = ({ navigation }) => {
     const getData = async () => {
         // console.log(resetData);
         API.lockList({ 'page': page, status: cari, userid: USER.id}, TOKEN).then((result) => {
-            console.log('hasil data', result)
+            // console.log('hasil segel list', result)
             if (page > 1) {
                 setTicket(ticket.concat(result.data.data))
             } else {
@@ -99,6 +99,7 @@ const Seal = ({ navigation }) => {
     const filter = () => {
         setLoading(true)
         resetData = true
+        // setRefresh(true)
         getData();
         // alert(cari)
     }
@@ -191,6 +192,7 @@ const Seal = ({ navigation }) => {
                         </ImageBackground>
                         </View>
                         <View style={[styles.textnfo, { flex: 1 }]}>
+                            <TextInfo title='Tanggal' item={item.created_at} />
                             <TextInfo title='Code' item={item.code} />
                             <TextInfo title='Nama' item={item.customer != null ? item.customer.namapelanggan : ''} />
                             <TextInfo title='Deskripsi' item={item.description} />

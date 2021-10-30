@@ -160,9 +160,8 @@ const ActionSeal = ({ navigation, route }) => {
                                                 </ImageBackground>
                                             </View>
                                             <View style={[styles.textnfo, { flex: 1.5 }]}>
-                                                <TextInfo title='Kode' item={item.code} />
+                                                <TextInfo title='Tanggal' item={item.created_at} />
                                                 <TextInfo title='Memo' item={item.memo} />
-                                               
                                                 <TextInfo title='Type' item={item.type} />
                                             </View>
                                         </View>
