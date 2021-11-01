@@ -20,8 +20,7 @@
       const lockStaffs =(data, token) => Get(`/api/close/admin/lockStaffs/${data}`, false, token)
       const lockShow =(data, token) => Get(`/api/close/admin/lockshow/${data}`, false, token)
       const typeShow =(data, token) => Get(`/api/close/admin/typeshow/${data}`, false, token)
-      const lockcreate =(data, token) => Get(`/api/close/admin/lockcreate/${data}`, false, token)
-      const DaperdanSub =(token) => Get('/api/close/admin/SubDapertementlist', false, token)
+      const lockcreate =(data, token) => Get(`/api/close/admin/lockcreate/${data}`, false, token)     
 
 
       //POST
@@ -46,6 +45,7 @@
       const lockactionsCreate = (data, token) => Post('/api/close/admin/lockactionscreate', false, data, token);
       const segelList =(data, token) => Post(`/api/close/admin/segel/list`, false, data, token);
       const lockStore = (data, token) => Post('/api/close/admin/segel/store', false, data, token);
+      const DaperdanSub =(data, token) => Post('/api/close/admin/SubDapertementlist', false, data, token)
       // PUT
       const customerEdit = (data, token) => Put(`/api/close/admin/customers/${data.id}`, false, data, token);
       const categoriesEdit = (data, token) => Put(`/api/close/admin/categories/${data.id}`, false, data, token);

@@ -45,7 +45,8 @@ const AddArrears =({navigation, route})=>{
         let isAmounted = true
         if(isAmounted){
             setLoading(true)
-            Promise.all([API.DaperdanSub(TOKEN),API.lockcreate(route.params.lock_id, TOKEN)]).then((res) => {
+            Promise.all([API.DaperdanSub({userid: USER.id},TOKEN),API.lockcreate(route.params.lock_id, TOKEN)]).then((res) => {
+                console.log('DaperdanSub', res)
                 setDepartements(res[0].data)
                 setSubdepartements(res[0][0])
                 setForm.code(form.code=res[1].data)
