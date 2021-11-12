@@ -63,7 +63,7 @@ const Seal = ({ navigation }) => {
     const getData = async () => {
         // console.log(resetData);
         API.lockList({ 'page': page, status: cari, userid: USER.id}, TOKEN).then((result) => {
-            // console.log('hasil segel list', result)
+            console.log('hasil segel list', result)
             if (page > 1) {
                 setTicket(ticket.concat(result.data.data))
             } else {
@@ -177,7 +177,7 @@ const Seal = ({ navigation }) => {
         return (
             <View style={{ alignItems: 'center' }}>
                 <View style={{ backgroundColor: colorStatus, width: 200, height: 35, borderTopRightRadius: 15, borderTopLeftRadius: 15, alignItems: 'center' }}>
-                    <Text style={styles.textStatus} >{item.status}</Text>
+                    <Text style={styles.textStatus} >{item.status == 'lock'? 'Segel': item.status == 'lock_resist'? 'Hambatan Segel': item.status == 'unplug'? 'Cabut': item.status == 'unplug_resist'? 'Hambatan Cabut': item.status == 'pending'? 'Pending': 'Tutup' }</Text>
                 </View>
                 <View style={[styles.content, { borderColor: borderStatus }]}>
                     <View style={{ flexDirection: 'row' }}>

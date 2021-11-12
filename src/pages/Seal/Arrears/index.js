@@ -126,7 +126,9 @@ const Arrears = ({navigation}) => {
                     <View style={{flexDirection:'row',justifyContent:'flex-end'}}>
                         { item.statusnunggak ==1 &&
                         <View style={{flexDirection:'row',width:'100%',height:'auto',paddingTop:15}}>
+                            { item.teruskan ==1 &&
                             <BtnContinue onPress={() => navigation.navigate('AddArrears',{lock_id:item.id})} />
+                            }
                         </View>
                         }
                     </View>

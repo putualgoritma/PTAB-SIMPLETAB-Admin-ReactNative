@@ -195,7 +195,7 @@ const AddActionSeal =({navigation, route})=>{
 
         let message = 'Mohon lengkapi data';
         let send = false;
-        if (responses.length > 0) {
+        if (form.type!='' && responses.length > 0) {
             
                 dataUpload =
                     [

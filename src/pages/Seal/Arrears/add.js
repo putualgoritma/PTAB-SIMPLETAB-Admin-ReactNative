@@ -59,7 +59,7 @@ const AddArrears =({navigation, route})=>{
     }, [])
 
     const handleAction =() => {
-        if(form.code !== '' && form.customer_id !=='' && form.subdapertement_id !== '' && form.description !=='' ){
+        if(form.customer_id !=='' && form.subdapertement_id !== '' && form.description !=='' ){
             
             setLoading(true)
             API.lockStore(form, TOKEN).then((result) => {
@@ -90,8 +90,6 @@ const AddArrears =({navigation, route})=>{
                             <View style={styles.baseBoxShadow} >
                                 <View style={styles.boxShadow} >
                                     <Title title='Tambah Segel' paddingVertical={5}/>
-                                    <Txt title='Kode'/>
-                                    <Inpt placeholder='Code' onChangeText={(item) => handleForm('code', item)} value={form.code}  />
                                     <Txt title='Kode Pelanggan'/>
                                     <Inpt placeholder='Kode Pelanggan' value={route.params.lock_id } onChangeText={(item) => handleForm('customer_id', item)}  editable={false}/>
                                     <Txt title='Departement'/>
