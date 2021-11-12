@@ -249,8 +249,10 @@ const Seal = ({ navigation }) => {
                                 items ={[
                                     {label : 'All', value : ''},
                                     {label : 'Pending', value : 'pending'},
-                                    {label : 'Active', value : 'active'},
-                                    {label : 'Close', value : 'close'}
+                                    {label : 'Hambatan Segel', value : 'lock_resist'},
+                                    {label : 'Segel', value : 'lock'},
+                                    {label : 'Hambatan Cabut', value : 'unplug_resist'},
+                                    {label : 'Cabut', value : 'unplug'}
                                 ]}
                                 onChangeValue={(item) => {
                                     setCari(item)
