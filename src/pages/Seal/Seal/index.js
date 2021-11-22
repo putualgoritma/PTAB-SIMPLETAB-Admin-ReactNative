@@ -192,6 +192,7 @@ const Seal = ({ navigation }) => {
                         </ImageBackground>
                         </View>
                         <View style={[styles.textnfo, { flex: 1 }]}>
+                            <TextInfo title='No SBG' item={item.customer_id} />
                             <TextInfo title='Tanggal' item={item.created_at} />
                             <TextInfo title='Code' item={item.code} />
                             <TextInfo title='Nama' item={item.customer != null ? item.customer.namapelanggan : ''} />

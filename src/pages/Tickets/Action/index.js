@@ -117,8 +117,24 @@ const Action = ({ navigation, route }) => {
 
                             // const imagefoto = (JSON.parse(item.image)[0])
                             var imagefoto = item.image != '' ? imagefoto = (JSON.parse(item.image)[0]) : null
+                            var imagefotoDone = item.image_done != null ? imagefotoDone = (JSON.parse(item.image_done)[0]) : null
 
-                            // console.log('foto ini', imagefoto)
+                            var foto = '';
+                            if(imagefotoDone !=null){
+                                foto=imagefotoDone
+                            }else{
+                                if (imagefoto == null){
+                                    if(item.image_prework !=null){
+                                        foto = item.image_prework 
+                                    }else{
+                                        foto ='/images/action/FotoDefault.png'
+                                    }
+                                }else{
+                                    foto = imagefoto
+                                }
+                            }
+                        
+                          // console.log('foto ini', imagefoto)
                             var colorStatus = '';
                             var borderStatus = '';
                             if (item.status == 'active') {
@@ -144,7 +160,9 @@ const Action = ({ navigation, route }) => {
                                                <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ width: 120, height: 150 }} >
                                                 <Image
                                                     // source={loadingImage == false ? { uri: Config.REACT_APP_BASE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}` } : require('../../../assets/img/ImageFoto.png')  }
-                                                    source={{ uri: Config.REACT_APP_BASE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}` }  }
+                                                 
+                                                    source={{ uri: Config.REACT_APP_BASE_URL + `${String(foto).replace('public/', '')}?time="${new Date()}` }  }
+                          
                                                     style={{ width: 120, height: 150 }}
                                                     // onProgress={({nativeEvent: { loaded, total } })=>{
                                                     //     console.log('total', loaded);
@@ -178,7 +196,6 @@ const Action = ({ navigation, route }) => {
                                                 {(item.status != 'close' && Permission.includes('action_staff_edit')) &&
                                                     <BtnEditStatus onPress={() => navigation.navigate('EditActionStatus', {item : item})} />
                                                 }
-                                                
                                             </View>
                                         </View>
                                     </View>

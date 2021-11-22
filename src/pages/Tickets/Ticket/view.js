@@ -224,6 +224,13 @@ const ViewTicket =({navigation, route})=>{
                                         </ImageBackground>
                                     </TouchableHighlight>
                                     <Distance distanceV={5}/>
+                                   
+                                    </View>
+                                    
+                                }
+                                 {imagePengerjaan != null && 
+                                <View>
+                                    
                                     <DataView title='Foto Pengerjaan' />
                                     <Modal visible={ShowImagePengerjaan} transparent={true} enablePreload={true}
                                         onRequestClose={() => setShowImagePengerjaan(false)}
@@ -256,7 +263,7 @@ const ViewTicket =({navigation, route})=>{
                                     </View>
                                     <Distance distanceV={5}/>
                                 </View>
-                            }
+                                }
                             {ticket.status =='close' &&
                                 <View>
                                     <DataView title='Foto Selesai' />
@@ -292,7 +299,7 @@ const ViewTicket =({navigation, route})=>{
                                 </View>
                                 }
                                    
-                                                                  
+                                                              
                                 </View>
                             </View>
                         </View>

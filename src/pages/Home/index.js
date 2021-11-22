@@ -42,7 +42,7 @@ const Home =({navigation})=>{
                             </TouchableOpacity>
                         }
                         
-                        { <TouchableOpacity onPress={()=>navigation.navigate('MenuSeal')}>
+                        { <TouchableOpacity onPress={()=>navigation.navigate('SealMeter')}>
                             <IconSegelMeter/>
                         </TouchableOpacity> }
                         <TouchableOpacity onPress={()=>navigation.navigate('Master')}>
