@@ -225,7 +225,7 @@ const editstatus = ({navigation, route}) => {
     // const [updateImagePengerjaan, setUpdateImagePengerjaan]= useState(false)
     const [form, setForm] = useState({
         action_id : action.id,
-        status : action.status =='pending' ? '' : action.status,
+        status : action.status =='pending' ? 'active' : action.status,
         memo : action.memo ? action.memo : '',
     })
     if(action.status == 'pending'){
@@ -238,18 +238,32 @@ const editstatus = ({navigation, route}) => {
             {'id' : 'close','name' : 'Close'},
             // {'id' : 'active','name' : 'Active'},
         ]
-    }else if(action.status == 'active'){
-  
-        if(action.image_prework && action.image_tools){
+    }
+    // else if(action.status == 'active'){
+    
+    //     if(action.image_prework && action.image_tools){
+    //         var dataStatus = [
+    //             {'id' : 'active','name' : 'Active'},
+    //             {'id' : 'close','name' : 'Close'},
+    //         ]
+    //     }else{
+    //         var dataStatus = [
+    //             {'id' : 'active','name' : 'Active'},
+    //         ]
+    //     }
+    // }
+    else if(action.status=='active'){
+        if(action.image == ""){
             var dataStatus = [
                 {'id' : 'active','name' : 'Active'},
-                {'id' : 'close','name' : 'Close'},
             ]
         }else{
             var dataStatus = [
+                {'id' : 'close','name' : 'Close'},
                 {'id' : 'active','name' : 'Active'},
             ]
         }
+
     }
 
     useEffect(() => {
@@ -433,7 +447,8 @@ const editstatus = ({navigation, route}) => {
         let dataUpload=[];
         let dataQtyImage = 1;
         let sendData = false
-        if(form.status != '' && form.action_id != '' && form.memo !='' && response_prework.uri !='' && responses_tools.uri !=''){
+        if(form.action_id != '' && form.memo !='' && response_prework.uri !='' && responses_tools.uri !=''){
+           
             setLoading(true)
             dataUpload =       
             [
@@ -443,38 +458,16 @@ const editstatus = ({navigation, route}) => {
                 },
             ];
 
-            if(action.status !='close' && form.status!='close'  ){
-                if(imagePengerjaan.length ==2){
-                   if(action.status == 'pending' && response_prework.base64=='' && responses_tools.base64 ==''){
-                        alert('image tool dan preework tidak boleh kosong')
+            if(action.status=='pending' ){
+                // if(imagePengerjaan.length ==2){
+                  
+                   if(action.status == 'pending' && response_prework.base64=='' ){
+                        alert('Foto Sebelum Pengerjaan Tidak Boleh Kosong')
+                        setLoading(false)
+                   }else if(action.status == 'pending' && responses_tools.base64 ==''){
+                        alert('Foto Alat Pengerjaan Tidak Boleh Kosong')
                         setLoading(false)
                    }else{
-                        for(let index = 0; index < imagePengerjaan.length; index++){
-                            if(action.status == 'pending' ){
-                                if(imagePengerjaan[index].fileName !='' && imagePengerjaan[index].base64 !=''){
-                                    dataUpload.push({
-                                        'name' : 'image' + dataQtyImage,
-                                        'filename' : imagePengerjaan[index].fileName,
-                                        'data' : imagePengerjaan[index].base64
-                                    })
-    
-                                    dataQtyImage++;
-                                }else{
-                                    alert('image no ' + dataQtyImage + ' tidak ditemukan');
-                                    setLoading(false)
-                                    sendData= false
-                                    break;
-                                }
-                            }else{
-                                dataUpload.push({
-                                    'name' : 'image' + dataQtyImage,
-                                    'filename' : imagePengerjaan[index].fileName,
-                                    'data' : imagePengerjaan[index].base64
-                                })
-    
-                                dataQtyImage++;
-                            }
-                        }
 
                         dataUpload.push(                       {
                             'name' : 'image_prework' ,
@@ -488,11 +481,63 @@ const editstatus = ({navigation, route}) => {
                         });
                         sendData = true
                    }
+                // }else{
+                //     // image kurang dari 2
+                //     alert('Foto Pengerjaan tidak boleh Kurang atau Lebih dari 2');
+                //     setLoading(false)
+                // }
+            }else if(action.status == 'active' && form.status =='active'  ){
+                // alert('active')
+             
+                    // for(let index = 0; index < imagePengerjaan.length; index++){
+                    //     if(action.status == 'pending' ){
+                    //         if(imagePengerjaan[index].fileName !='' && imagePengerjaan[index].base64 !=''){
+                    //             dataUpload.push({
+                    //                 'name' : 'image' + dataQtyImage,
+                    //                 'filename' : imagePengerjaan[index].fileName,
+                    //                 'data' : imagePengerjaan[index].base64
+                    //             })
+
+                    //             dataQtyImage++;
+                    //         }else{
+                    //             alert('image no ' + dataQtyImage + ' tidak ditemukan');
+                    //             setLoading(false)
+                    //             sendData= false
+                    //             break;
+                    //         }
+                    //     }else{
+                    //         dataUpload.push({
+                    //             'name' : 'image' + dataQtyImage,
+                    //             'filename' : imagePengerjaan[index].fileName,
+                    //             'data' : imagePengerjaan[index].base64
+                    //         })
+
+                    //         dataQtyImage++;
+                    //     }
+                    // }
+                let dataQtyImagePengerjaan =1;
+                if(imagePengerjaan.length ==2){
+                    for(let index = 0; index < imagePengerjaan.length; index++){
+                       if(imagePengerjaan[index].base64 ){
+                            dataUpload.push({
+                                'name' : 'image' + dataQtyImagePengerjaan,
+                                'filename' : imagePengerjaan[index].fileName,
+                                'data' : imagePengerjaan[index].base64
+                            })
+                            dataQtyImagePengerjaan++;
+                       }
+                    //    else{
+                    //        alert('image no ' + dataQtyImagePengerjaan + ' tidak ditemukan');
+                    //        setLoading(false)
+                    //        break;
+                    //    }
+                    }
+                    sendData= true;
                 }else{
-                    // image kurang dari 2
-                    alert('image tidak boleh lebih atau kurang dari 2');
+                    alert('Foto Pengerjaan Harus 2')
                     setLoading(false)
-                }
+                } 
+           
             }else{
                 
                 let dataQtyImageDone =1;
@@ -513,15 +558,16 @@ const editstatus = ({navigation, route}) => {
                     }
                     sendData= true;
                 }else{
-                    alert('image selesai pengerjaan harus 2 foto')
+                    alert('Foto Setelah Pengerjaan Harus 2')
                     setLoading(false)
                 }
                 // alert('ini untuk status close')
                 // setLoading(false)
             }
+     
         }else{
             // form
-            alert('data belum lengkap')
+            alert('Data Belum Lengkap')
             setLoading(false)
         }
 
@@ -603,10 +649,9 @@ const editstatus = ({navigation, route}) => {
 
                                     <Txt title='Deskripsi'/>
                                     <TxtArea placeholder='Masukan Deskripsi'  onChangeText={(item)=> handleForm('memo', item)} value={form.memo} />
-                                    {form.status != 'close' &&
+                                    {(form.status != 'close' && action.status == 'pending') && 
                                     <View>
                                     <Txt title ='Foto Sebelum Pengerjaan'/>
-
                                     <View style={{alignItems:'center'}}>
                                         <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
                                             <Image
@@ -673,11 +718,14 @@ const editstatus = ({navigation, route}) => {
                                                 icon = {<FontAwesomeIcon icon={faCamera} color='#ffffff'/>}
                                             />
                                         </View>
-                                        <Txt title='Foto Pengerjaan'/>
-                                        <ButtonImage  test ={test} addImageIndex={addImageIndex} imagePengerjaan = {imagePengerjaan} Image ={getImage} dataImage = {imagePengerjaan} deleteImage={()=>deleteImage()} resetImage={() => resetImage()} qty = {action.image ? JSON.parse(action.image).length : 1}  />
-                              
                                     </View>
-                                    }
+                                     }
+                                        {(action.status == 'active' && form.status =='active')&&
+                                        <View>
+                                            <Txt title='Foto Pengerjaan'/>
+                                            <ButtonImage  test ={test} addImageIndex={addImageIndex} imagePengerjaan = {imagePengerjaan} Image ={getImage} dataImage = {imagePengerjaan} deleteImage={()=>deleteImage()} resetImage={() => resetImage()} qty = {action.image ? JSON.parse(action.image).length : 1}  />
+                                        </View>
+                                        }
                                     {form.status == 'close' &&
                                     <View>
                                         <Txt title='Foto Setelah Pengerjaan'/>
@@ -690,6 +738,7 @@ const editstatus = ({navigation, route}) => {
                                             <Btn title='Simpan' onPress={handleAction}/>
                                         </View>
                                    }
+                                    {/* <Btn title='Simpan' onPress={()=>console.log('data',form.status)}/> */}
                                 </View>
                             </View>
                         </View>
