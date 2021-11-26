@@ -36,6 +36,7 @@ const Seal = ({ navigation }) => {
     const [ticket, setTicket] = useState([]);
     const [page, setPage] = useState(1)
     const [cari, setCari] = useState()
+    const [searchfilter, setSearchfilter] = useState()
     const [lastPage, setLastPage] = useState()
     const isFocused = useIsFocused();
     const [loadingImage, setLoadingImage] = useState(true)
@@ -62,7 +63,7 @@ const Seal = ({ navigation }) => {
 
     const getData = async () => {
         // console.log(resetData);
-        API.lockList({ 'page': page, status: cari, userid: USER.id}, TOKEN).then((result) => {
+        API.lockList({ 'page': page, status: cari, searchfilter : searchfilter, userid: USER.id}, TOKEN).then((result) => {
             console.log('hasil segel list', result)
             if (page > 1) {
                 setTicket(ticket.concat(result.data.data))
@@ -241,6 +242,10 @@ const Seal = ({ navigation }) => {
                 <View style={{ paddingHorizontal: 20 }}>
                     <Title title='Segel Meter' />
                     <Distance distanceV={10} />
+                    <View style={{ paddingBottom: 5 }}>
+                       <TextInput style={styles.search} value={searchfilter} onChangeText={(item) => setSearchfilter(item)} ></TextInput>
+                       </View>
+                       <Distance distanceH={5} />
                     <View style={{ flexDirection: 'row' }}>
                         {/* <TextInput style={styles.search} value={cari} onChangeText={(item) => setCari(item)} ></TextInput> */}
                         
@@ -259,8 +264,7 @@ const Seal = ({ navigation }) => {
                                     setCari(item)
                                 }}
                             />
-                       </View>
-
+                       </View>                      
 
                         <Distance distanceH={5} />
                         <Btn
