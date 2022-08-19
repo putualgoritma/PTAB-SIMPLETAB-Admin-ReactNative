@@ -69,6 +69,7 @@ const SelectCustomer = ({navigation, route}) => {
     const getData = async () => {
         // alert('asasjasjn')
         // console.log(resetData);
+        console.log('search',find)
         API.customerList({'page' : page, search : find},TOKEN).then((result) => {
             console.log(result)
             if(page > 1){
@@ -129,6 +130,7 @@ const SelectCustomer = ({navigation, route}) => {
             <View style={styles.content}>
                 <View style={styles.textnfo}>
                    <TextInfo title = 'Tipe' item={item.type == 'Public' ? 'umum' : 'Pelanggan'}/>
+                   <TextInfo title = 'No SBG' item={item.nomorrekening} />
                    <TextInfo title = 'Nama Pelanggan' item={item.namapelanggan} />
                    <TextInfo title = 'Alamat' item={item.alamat} />
                    <TextInfo title = 'Telepon' item={item.phone} />

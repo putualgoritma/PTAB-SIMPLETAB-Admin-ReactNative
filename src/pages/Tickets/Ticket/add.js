@@ -385,6 +385,8 @@ const AddTicket = ({ navigation, route }) => {
         }
 
 
+        console.log('dataUpload',dataUpload)
+        console.log('defcustomer_id',defcustomer_id)
         if (form.title != '' && form.category_id != '' && form.description != '' && form.customer_id != '' && form.lat != '' && form.lng != '') {
 
             if (send) {
@@ -403,7 +405,7 @@ const AddTicket = ({ navigation, route }) => {
                 ).then((result) => {
                     setLoading(false)
                     let data = JSON.parse(result.data);
-                    console.log(data);
+                    console.log('data post',data);
                     alert(data.message)
                     navigation.navigate('Menu')
                 }).catch((e) => {

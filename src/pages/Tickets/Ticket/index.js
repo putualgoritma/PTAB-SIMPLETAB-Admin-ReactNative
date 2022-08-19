@@ -118,7 +118,8 @@ const Ticket = ({ navigation }) => {
                     text: 'Ya',
                     onPress: () => {
                         setLoading(true)
-                        API.ticketsDelete($id, TOKEN).then((result) => {
+                        API.ticketsClose({id:$id}, TOKEN).then((result) => {
+                        //API.ticketsDelete($id, TOKEN).then((result) => {
                             resetData = true;
                             setPage(1)
                             getData();

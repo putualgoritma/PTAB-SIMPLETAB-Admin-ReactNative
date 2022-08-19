@@ -46,13 +46,14 @@
       const segelList =(data, token) => Post(`/api/close/admin/segel/list`, false, data, token);
       const lockStore = (data, token) => Post('/api/close/admin/segel/store', false, data, token);
       const DaperdanSub =(data, token) => Post('/api/close/admin/SubDapertementlist', false, data, token)
+      const ticketsClose = (data, token) => Post(`/api/close/admin/ticket-close`, false, data, token);
       // PUT
       const customerEdit = (data, token) => Put(`/api/close/admin/customers/${data.id}`, false, data, token);
       const categoriesEdit = (data, token) => Put(`/api/close/admin/categories/${data.id}`, false, data, token);
       const dapertementsEdit = (data, token) => Put(`/api/close/admin/dapertements/${data.id}`, false, data, token);
       const subdapertementsEdit = (data, token) => Put(`/api/close/admin/subdapertements/${data.id}`, false, data, token);
       const staffsEdit = (data, token) => Put(`/api/close/admin/staffs/${data.id}`, false, data, token);
-      const ticketsEdit = (data, token) => Put(`/api/close/admin/tickets/${data.id}`, false, data, token);
+      const ticketsEdit = (data, token) => Put(`/api/close/admin/tickets/${data.id}`, false, data, token);      
       const actionsEdit = (data, token) => Put(`/api/close/admin/actions/${data.id}`, false, data, token);
       const actionStaffUpdate = (data, token) => Put(`/api/close/admin/actionStaffUpdate`, false, data, token);
 
@@ -125,7 +126,8 @@
             segelList,
             lockStore,
             lockcreate,
-            DaperdanSub
+            DaperdanSub,
+            ticketsClose
       }
 
       export default API;
