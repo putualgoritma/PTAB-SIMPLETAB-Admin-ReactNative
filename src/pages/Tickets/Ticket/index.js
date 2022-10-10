@@ -72,7 +72,7 @@ const Ticket = ({ navigation }) => {
                 console.log('delete');
             }
             setLastPage(result.data.last_page)
-            // console.log('tiket data',result.data);
+            console.log('tiket data',result.data);
             setLoading(false)
             setRefresh(false)
         }).catch(e => {
@@ -187,6 +187,7 @@ const Ticket = ({ navigation }) => {
                         <View style={[styles.textnfo, { flex: 1 }]}>
                             <TextInfo title='Tanggal' item={item.created_at} />
                             <TextInfo title='Nama' item={item.customer.namapelanggan + '-' + item.customer_id} />
+                            <TextInfo title='Telfon' item={item.customer.telp} />
                             <TextInfo title='Code' item={item.code } />
                             <TextInfo title='Kategori' item={item.category.name} />
                             <TextInfo title='Deskripsi' item={item.description} />

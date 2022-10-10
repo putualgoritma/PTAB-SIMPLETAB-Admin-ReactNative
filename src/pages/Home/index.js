@@ -42,9 +42,9 @@ const Home =({navigation})=>{
                             </TouchableOpacity>
                         }
                         
-                        { <TouchableOpacity onPress={()=>navigation.navigate('SealMeter')}>
+                        {/* { <TouchableOpacity onPress={()=>navigation.navigate('SealMeter')}>
                             <IconSegelMeter/>
-                        </TouchableOpacity> }
+                        </TouchableOpacity> } */}
                         <TouchableOpacity onPress={()=>navigation.navigate('Master')}>
                             <IconMaster/>
                         </TouchableOpacity>
@@ -53,16 +53,21 @@ const Home =({navigation})=>{
                                 <IconUsersManagement/>
                             </TouchableOpacity>
                         } */}
+                        {Permission.includes('user_management_access') &&
+                            <TouchableOpacity onPress={()=>navigation.navigate('Profile')}>
+                                <IconUsersManagement/>
+                            </TouchableOpacity>
+                        }
                     </View>
                 </View>
                 <Distance distanceV={20}/>
                 <View style={{alignItems:'center'}}>
                     <View style={styles.menuStyle}>
-                            {Permission.includes('user_management_access') &&
+                            {/* {Permission.includes('user_management_access') &&
                             <TouchableOpacity onPress={()=>navigation.navigate('Profile')}>
                                 <IconUsersManagement/>
                             </TouchableOpacity>
-                        }
+                        } */}
                             <IconNone/>
                             <IconNone/>  
                     </View>
