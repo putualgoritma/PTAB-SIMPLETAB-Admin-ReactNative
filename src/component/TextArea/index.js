@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     },
     textarea: {
         textAlignVertical: 'top', 
-        height: 170,
         fontSize: 14,
         color: '#696969',
     },

@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { Btn, BtnStaff, BtnDelete, BtnAction, BtnDetail, BtnEdit, Footer, HeaderForm, Spinner, Title, Dropdown } from '../../../component';
 import API from '../../../service';
 import { colors, Distance } from '../../../utils';
-import Config from 'react-native-config';
 
 const TextInfo = (props) => {
     return (
@@ -186,8 +185,8 @@ const Seal = ({ navigation }) => {
                         <View style={{ flex: 1,height:200, paddingTop:3, alignItems:'center', justifyContent:'center'}}>
                         <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ width: 120, height: 150}} >
                             <Image
-                                key={Config.REACT_APP_IMAGE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}`}
-                                source={{ uri: Config.REACT_APP_IMAGE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}`}}
+                                key={`https://simpletabadmin.ptab-vps.com/pdf/` + `${String(imagefoto).replace('public/', '')}?time="${new Date()}`}
+                                source={{ uri: `https://simpletabadmin.ptab-vps.com/pdf/` + `${String(imagefoto).replace('public/', '')}?time="${new Date()}`}}
                                 style={{ flex: 1, height:'100%' }} 
                             />
                         </ImageBackground>

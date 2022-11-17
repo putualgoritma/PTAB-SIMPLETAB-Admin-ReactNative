@@ -2,7 +2,6 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View, RefreshControl,ImageBackground } from 'react-native';
-import Config from 'react-native-config';
 import { useSelector } from 'react-redux';
 import { BtnAdd, BtnDelete, BtnDetail, BtnEdit, BtnStaff, Footer, HeaderForm, Spinner, Title, BtnEditStatus } from '../../../component';
 import API from '../../../service';
@@ -154,7 +153,7 @@ const ActionSeal = ({ navigation, route }) => {
                                             <View style={{ flex: 1, height: 150, paddingTop: 3, justifyContent:'center', alignItems:'center'}}>
                                                <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ width: 120, height: 150 }} >
                                                 <Image
-                                                    source={{ uri: Config.REACT_APP_IMAGE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}` }  }
+                                                    source={{ uri: `https://simpletabadmin.ptab-vps.com/pdf/` + `${String(imagefoto).replace('public/', '')}?time="${new Date()}` }  }
                                                     style={{ width: 120, height: 150 }}
                                                 />
                                                 </ImageBackground>

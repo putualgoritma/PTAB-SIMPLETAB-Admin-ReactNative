@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { Btn, Footer, HeaderInput, Inpt, Spinner, Title, Txt, TxtArea } from '../../../component';
 import Button from '../../../component/Button';
 import { colors, Distance } from '../../../utils';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import API from '../../../service';
 
 const ButtonImage = (props) => {

@@ -175,8 +175,8 @@ const Ticket = ({ navigation }) => {
                         <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ width: 120, height: 150}} >
                             {/* {loadingImage && <Image source={require('../../../assets/img/ImageLoading.gif')} style={{ width: 150, height: 200 }} />} */}
                             <Image
-                               key={item.ticket_image.length > 0 ? Config.REACT_APP_BASE_URL + `${String(imagefoto).replace('public/', '')}` : null}
-                                source={item.ticket_image.length > 0 ?{ uri: Config.REACT_APP_BASE_URL + `${String(imagefoto).replace('public/', '')}`} : require('../../../assets/img/ImageLoading.gif') }
+                               key={item.ticket_image.length > 0 ? `https://simpletabadmin.ptab-vps.com` + `${String(imagefoto).replace('public/', '')}` : null}
+                                source={item.ticket_image.length > 0 ?{ uri: `https://simpletabadmin.ptab-vps.com` + `${String(imagefoto).replace('public/', '')}`} : require('../../../assets/img/ImageLoading.gif') }
                                 style={{ flex: 1, height:'100%' }} 
                                 // onLoadEnd={() => setLoadingImage(false)}
                                 // onLoadStart={() => setLoadingImage(true)}

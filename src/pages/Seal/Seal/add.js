@@ -13,7 +13,7 @@ import Button from '../../../component/Button';
 import VideoPlayer from '../../../component/Video';
 import API from '../../../service';
 import { colors, Distance } from '../../../utils';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import { useIsFocused } from '@react-navigation/native';
 import { RadioButton } from 'react-native-paper';
 

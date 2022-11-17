@@ -37,7 +37,7 @@ const Action = ({ navigation, route }) => {
     const [loadingImage, setLoadingImage] = useState(true)
     const [refreshing, setRefreshing] = useState(false);
     const USER = useSelector((state) => state.UserReducer);
-  
+//   console.log(USER.id);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -66,7 +66,7 @@ const Action = ({ navigation, route }) => {
         API.actions({ ticket_id: route.params.ticket.id, userid: USER.id }, TOKEN).then((result) => {
             setActions(result.data)
             setLoading(false)
-            // console.log('nilai staf', result.data)
+            console.log(foto)
         }).catch((e) => {
             console.log(e.request);
             setLoading(false)
@@ -122,6 +122,7 @@ const Action = ({ navigation, route }) => {
                             var foto = '';
                             if(imagefotoDone !=null){
                                 foto=imagefotoDone
+                                console.log(foto)
                             }else{
                                 if (imagefoto == null){
                                     if(item.image_prework !=null){
@@ -132,6 +133,7 @@ const Action = ({ navigation, route }) => {
                                 }else{
                                     foto = imagefoto
                                 }
+                                console.log(foto)
                             }
                         
                           // console.log('foto ini', imagefoto)
@@ -161,7 +163,7 @@ const Action = ({ navigation, route }) => {
                                                 <Image
                                                     // source={loadingImage == false ? { uri: Config.REACT_APP_BASE_URL + `${String(imagefoto).replace('public/', '')}?time="${new Date()}` } : require('../../../assets/img/ImageFoto.png')  }
                                                  
-                                                    source={{ uri: Config.REACT_APP_BASE_URL + `${String(foto).replace('public/', '')}?time="${new Date()}` }  }
+                                                    source={{ uri:`https://simpletabadmin.ptab-vps.com` + `${String(foto).replace('public/', '')}?time="${new Date()}`}}
                           
                                                     style={{ width: 120, height: 150 }}
                                                     // onProgress={({nativeEvent: { loaded, total } })=>{

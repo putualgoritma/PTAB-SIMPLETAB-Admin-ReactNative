@@ -13,7 +13,7 @@ import Button from '../../../component/Button';
 import VideoPlayer from '../../../component/Video';
 import API from '../../../service';
 import { colors, Distance } from '../../../utils';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import { useIsFocused } from '@react-navigation/native';
 import { RadioButton } from 'react-native-paper';
 
@@ -41,11 +41,11 @@ const ButtonImage = (props) => {
                                 [
                                     {
                                         text: 'Galery',
-                                        onPress: () => props.ImageGalery()
+                                        onPress: () => props.ImageGalery(props.dataImage[index] ? index: null)
                                     },
                                     {
                                         text: 'Camera',
-                                        onPress: () => props.Image()
+                                        onPress: () => props.Image(props.dataImage[index] ? index: null)
                                     }
                                 ]
                             );
@@ -146,12 +146,14 @@ const AddTicket = ({ navigation, route }) => {
 
     useEffect(() => {
         // if(isFocused){
+         
         setLoading(true)
         LocationServicesDialogBox.checkLocationServicesIsEnabled({
             message: "<h2 style='color: #0af13e'>Use Location ?</h2>This app wants to change your device settings:<br/><br/>Use GPS, Wi-Fi, and cell network for location<br/><br/><a href='#'>Learn more</a>",
             ok: "YES",
             cancel: "NO",
         }).then(function (success) {
+           
             setStatusGps(success.status)
             Promise.all([API.categories(TOKEN), API.defcustomer(TOKEN), requestLocationPermission()]).then((res) => {
                 console.log('corrrrrr', res);
@@ -225,25 +227,14 @@ const AddTicket = ({ navigation, route }) => {
 
 
 
-    const getImage = () => {
-        launchCamera(
-            {
-                mediaType: 'photo',
-                includeBase64: true,
-                maxHeight: 500,
-                maxWidth: 500,
-            },
-            (response) => {
-                if (response.assets) {
-                    let dataImage = response.assets[0];
-                    setResponses([...responses, dataImage])
-                }
-            }
-        )
+    const getImage = (n) => {
+        requestCameraPermission(n)
+     
     }
 
 
-    const getImageGalery = () => {
+    const getImageGalery = (n) => {
+        console.log('D'+n)
         launchImageLibrary(
             {
                 mediaType: 'photo',
@@ -252,9 +243,18 @@ const AddTicket = ({ navigation, route }) => {
                 maxWidth: 500,
             },
             (response) => {
-                if (response.assets) {
-                    let dataImage = response.assets[0];
-                    setResponses([...responses, dataImage])
+                if(n != null){
+                    let dataImage = [...responses];
+                   dataImage[n] = response.assets[0]
+                // console.log('nn'+dataImage)
+                setResponses(dataImage)
+                //    alert('brha')
+                 
+                }
+                else{
+                let dataImage = response.assets[0];
+                setResponses([...responses, dataImage])
+                // alert('gaga')
                 }
             }
         )
@@ -263,6 +263,7 @@ const AddTicket = ({ navigation, route }) => {
 
 
     const getVideo = () => {
+        requestCameraPermission()
         launchCamera(
             {
                 mediaType: 'video',
@@ -407,7 +408,8 @@ const AddTicket = ({ navigation, route }) => {
                     let data = JSON.parse(result.data);
                     console.log('data post',data);
                     alert(data.message)
-                    navigation.navigate('Menu')
+                    navigation.navigate('Ticket')
+                    // navigation.navigate('Menu')
                 }).catch((e) => {
                     //    console.log(e);
                     setLoading(false)
@@ -545,6 +547,91 @@ const AddTicket = ({ navigation, route }) => {
             info = 1
         }
     }
+
+      const requestCameraPermission = async (n) => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              'title' : 'Camera Permission',
+              'message': 'App need to use camera access to take an Image',
+            //   buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            launchCamera(
+                {
+                    mediaType: 'photo',
+                    includeBase64: true,
+                    maxHeight: 500,
+                    maxWidth: 500,
+                },
+                (response) => {
+                    if (response.assets) {
+                        if(n != null){
+                            let dataImage = [...responses];
+                           dataImage[n] = response.assets[0]
+                        // console.log('nn'+dataImage)
+                        setResponses(dataImage)
+                        //    alert('brha')
+                         
+                        }
+                        else{
+                        let dataImage = response.assets[0];
+                        setResponses([...responses, dataImage])
+                        // alert('gaga')
+                        }
+                    }
+                }
+            )
+          } else {
+            console.log("Camera permission denied");
+          }
+        } catch (err) {
+        //   console.warn(err);
+        }
+      };
+
+      const requestCameraPermissionVideo = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              'title' : 'Camera Permission',
+              'message': 'App need to use camera access to take an Image',
+            //   buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            launchCamera(
+                {
+                    mediaType: 'video',
+                    quality: 1,
+                    videoQuality: 'high'
+                    // includeBase64: true 
+                },
+                (response) => {
+                    if (response.assets) {
+                        setVideo(response.assets[0]);
+                        setForm({
+                            ...form,
+                            video: response.assets[0].fileName
+                        })
+                        // console.log(response.assets[0]);
+                    }
+                })
+          } else {
+            console.log("Camera permission denied");
+          }
+        } catch (err) {
+        //   console.warn(err);
+        }
+      };
+      
 
     // const requestLocationPermission =  async () => {
     //     try {
@@ -701,24 +788,40 @@ const AddTicket = ({ navigation, route }) => {
                                                             text: 'Ya',
                                                             // onPress : () => {generateCodeOTP(); setModalVisible(true)}
                                                             onPress: () =>
-
-                                                                launchCamera(
+{ 
+                                                            Alert.alert(
+                                                                'Bukti Foto',
+                                                                `Galery atau Camera? `,
+                                                                [
                                                                     {
-                                                                        mediaType: 'video',
-                                                                        quality: 1,
-                                                                        videoQuality: 'high'
-                                                                        // includeBase64: true 
+                                                                        text : 'Galery',
+                                                                        onPress : () =>  launchImageLibrary(
+                                                                            {
+                                                                                mediaType: 'video',
+                                                                                quality: 1,
+                                                                                videoQuality: 'high'
+                                                                                // includeBase64: true 
+                                                                            },
+                                                                            (response) => {
+                                                                                if (response.assets) {
+                                                                                    setVideo(response.assets[0]);
+                                                                                    setForm({
+                                                                                        ...form,
+                                                                                        video: response.assets[0].fileName
+                                                                                    })
+                                                                                    // console.log(response.assets[0]);
+                                                                                }
+                                                                            }
+                                                                        )
                                                                     },
-                                                                    (response) => {
-                                                                        if (response.assets) {
-                                                                            setVideo(response.assets[0]);
-                                                                            setForm({
-                                                                                ...form,
-                                                                                video: response.assets[0].fileName
-                                                                            })
-                                                                            // console.log(response.assets[0]);
-                                                                        }
-                                                                    })
+                                                                    {
+                                                                        text : 'Camera',
+                                                                        onPress : () =>  requestCameraPermissionVideo()
+                                                                    }
+                                                                ]
+                                                            )
+                                                            }
+                                                              
 
                                                             // Alert.alert(
                                                             //     'Bukti Video',
@@ -753,7 +856,7 @@ const AddTicket = ({ navigation, route }) => {
                     </View>
                 </ScrollView>
             </ImageBackground>
-            <Footer navigation={navigation} focus='Home' />
+            <Footer navigation={navigation} focus='Home'/>
         </View>
     )
 }

@@ -74,9 +74,10 @@ const SelectCustomer = ({navigation, route}) => {
             console.log(result)
             if(page > 1){
                 setDataCustomers(dataCustomers.concat(result.data.data)) 
-                // resetData = false
+                console.log(result.data.data);
             }else{       
                 setDataCustomers(result.data.data)
+                console.log(result.data.data[0].nomorrekening);
                 console.log('delete');
             }
             setLastPage(result.data.last_page)
@@ -98,6 +99,7 @@ const SelectCustomer = ({navigation, route}) => {
     useEffect(() => {
         getData()
       }, [refresh])
+
     const filter = () => {
         setLoading(true)
         resetData = true
@@ -145,9 +147,9 @@ const SelectCustomer = ({navigation, route}) => {
                         // onPress={() => navigation.navigate('AddTicket', {ticket : form})}
                         onPress={() => {setForm({
                             ...route.params.ticket,
-                            customer_id : item.id,
-                            customer_name : item.name 
-                        });}}
+                            customer_id : item.nomorrekening,
+                            customer_name : item.namapelanggan
+                        }); console.log('test'+item.nomorrekening)}}
                     />
                 </View>
             </View>
