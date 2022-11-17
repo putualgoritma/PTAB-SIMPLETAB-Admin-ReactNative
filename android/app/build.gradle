@@ -1,14 +1,3 @@
-// buildscript {
-//     repositories {
-//         gradlePluginPortal()
-//     }
-//     dependencies {
-//         classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.10, 0.99.99]'
-//     }
-// }
-
-// apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
-
 apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
@@ -146,7 +135,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.pdamkeluhan"
+        applicationId "com.admin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -168,7 +157,7 @@ android {
                     cppFlags "-std=c++17"
                     // Make sure this target name is the same you specify inside the
                     // src/main/jni/Android.mk file for the `LOCAL_MODULE` variable.
-                    targets "pdamkeluhan_appmodules"
+                    targets "admin_appmodules"
                     // Fix for windows limit on number of character in file paths and in command lines
                     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
                         arguments "NDK_APP_SHORT_COMMANDS=true"
@@ -181,7 +170,7 @@ android {
                 }
             }
         }
-         missingDimensionStrategy 'react-native-camera', 'general' 
+                missingDimensionStrategy 'react-native-camera', 'general'
     }
 
     if (isNewArchitectureEnabled()) {
@@ -240,6 +229,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+           release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -251,6 +248,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+             signingConfig signingConfigs.release
         }
     }
 
@@ -299,10 +297,7 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-    implementation "com.facebook.fresco:animated-gif:2.5.0"
-//     implementation(project(':react-native-camera')){
-// exclude group: 'com.google.android.gms'
-// }
+     implementation "com.facebook.fresco:animated-gif:2.5.0"
 }
 
 if (isNewArchitectureEnabled()) {
@@ -334,4 +329,5 @@ def isNewArchitectureEnabled() {
     return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
 
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+// aktifkan ketika dibuild
+// apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import {View,ImageBackground,StyleSheet,ScrollView,Image,Text,Modal,TouchableHighlight} from 'react-native'
 import {HeaderView,DataView,Footer,Title, Spinner,Btn} from '../../../component'
 import ImageViewer from 'react-native-image-zoom-viewer';
-import Config from 'react-native-config'
 
 const ViewActionSeal =({navigation, route})=>{
     const image = require('../../../assets/img/BackgroundView.png')
@@ -30,7 +29,7 @@ const ViewActionSeal =({navigation, route})=>{
     useEffect(() => {
         imageAction.map((item, index) => {
             images.push({
-             url: Config.REACT_APP_IMAGE_URL + `${String(item).replace('public/', '')}?time="${new Date()}`,
+             url: `https://simpletabadmin.ptab-vps.com/pdf/` + `${String(item).replace('public/', '')}?time="${new Date()}`,
             })
         })
  
@@ -76,7 +75,7 @@ const ViewActionSeal =({navigation, route})=>{
                                                 <Image 
                                                     key={index} 
                                                     style={{height : 220, width : 270, marginVertical : 10}} 
-                                                    source = {{uri : Config.REACT_APP_IMAGE_URL + `${String(item).replace('public/', '')}?time="${new Date()}`}}
+                                                    source = {{uri : `https://simpletabadmin.ptab-vps.com/pdf/` + `${String(item).replace('public/', '')}?time="${new Date()}`}}
                                                  
                                                     />
                                             )

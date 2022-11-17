@@ -1,10 +1,10 @@
 import { faCamera, faPlusCircle, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ImageBackground, PermissionsAndroid, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Config from 'react-native-config';
-import RNFetchBlob from 'react-native-fetch-blob';
-import { launchCamera } from 'react-native-image-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Select2 from 'react-native-select-two';
 import { useSelector } from 'react-redux';
 import { Btn, Footer, HeaderInput, Spinner, Txt, TxtArea } from '../../../component';
@@ -32,8 +32,9 @@ const ButtonImage =  (props) => {
                     <Image
                         style={{width:'90%', height: 200}}
                         // source={props.dataImage[index]==null ? require('../../../assets/img/ImageFoto.png') :{uri: props.dataImage[index].uri}}
-                        source={props.imagePengerjaan[index].uri=='' ? require('../../../assets/img/ImageFoto.png') : ({uri : props.imagePengerjaan[index].from == 'local' ? props.imagePengerjaan[index].uri : Config.REACT_APP_BASE_URL + `${String(props.imagePengerjaan[index].uri).replace('public/', '')}?time="${new Date()}` })}
+                        source={props.imagePengerjaan[index].uri=='' ? require('../../../assets/img/ImageFoto.png') : ({uri : props.imagePengerjaan[index].from == 'local' ? props.imagePengerjaan[index].uri : `https://simpletabadmin.ptab-vps.com/` + `${String(props.imagePengerjaan[index].uri).replace('public/', '')}?time="${new Date()}` })}
                     />
+                    {/* {console.log('lloo'+props.imagePengerjaan[index].base64)} */}
                       </ImageBackground> 
                 </View>
               
@@ -92,13 +93,16 @@ const ButtonImageDone = (props) => {
                 <Image
                         style={{width:'90%', height: 200}}
                         // source={props.dataImage[index]==null ? require('../../../assets/img/ImageFoto.png') :{uri: props.dataImage[index].uri}}
-                        source={props.image_done[indexdone].uri=='' ? require('../../../assets/img/ImageFoto.png') : ({uri : props.image_done[indexdone].from == 'local' ? props.image_done[indexdone].uri : Config.REACT_APP_BASE_URL + `${String(props.image_done[indexdone].uri).replace('public/', '')}?time="${new Date()}` })}
+                        source={props.image_done[indexdone].uri=='' ? require('../../../assets/img/ImageFoto.png') : ({uri : props.image_done[indexdone].from == 'local' ? props.image_done[indexdone].uri : `https://simpletabadmin.ptab-vps.com/` + `${String(props.image_done[indexdone].uri).replace('public/', '')}?time="${new Date()}` })}
                     />
                 </View>
                 {props.image_done[indexdone].uri =='' &&
                     <View style={{alignItems : 'center'}}>
                     <Button
-                        onPress={() => {props.ImageDone(indexdone); props.image_done ? setShowDone(false) : null}}
+                        onPress={() =>
+                            {
+                                
+                                props.ImageDone(indexdone); props.image_done ? setShowDone(false) : null}}
                             title="Ambil Foto"
                             width="80%"
                             backgroundColor='#1DA0E0'
@@ -146,6 +150,7 @@ const editstatus = ({navigation, route}) => {
     const USER = useSelector((state) => state.UserReducer);
     const TOKEN = useSelector((state) => state.TokenReducer);
     const [test, setTest] = useState('halo 1 ')
+    const [countImagePengerjaan, setcountImagePengerjaan] = useState('0')
     const [imagePengerjaan, setImagePengerjaan] = useState(
         action.image ? 
        JSON.parse( action.image).map((item) => {
@@ -159,8 +164,9 @@ const editstatus = ({navigation, route}) => {
                  width: 0,
                  from : 'api'
              }  
- 
+             
              return data
+            
          }) : 
         [ {
             base64: "",
@@ -267,11 +273,55 @@ const editstatus = ({navigation, route}) => {
     }
 
     useEffect(() => {
+        console.log('000000')
+        requestCameraPermission()
         console.log(action);
     },[])
 
+    const requestCameraPermission = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              'title': 'Camera Permission',
+              'message':
+                'App need to use camera access to take an Image',
+            //   buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log("You can use the camera");
+          } else {
+            console.log("Camera permission denied");
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      };
 
-    const getImage = (index) => {
+   
+
+    const getImageGalery = () => {
+        launchImageLibrary(
+            {
+                mediaType: 'photo',
+                includeBase64: true,
+                maxHeight: 500,
+                maxWidth: 500,
+            },
+            (response) => {
+                if (response.assets) {
+                    let dataImage = response.assets[0];
+                    setResponses([...responses, dataImage])
+                }
+            }
+        )
+    }
+
+
+    const getImagePreWork = (index) => {
         launchCamera(
             {
                 mediaType: 'photo',
@@ -282,20 +332,21 @@ const editstatus = ({navigation, route}) => {
             (response) => {
                 if(response.assets){
                     let dataImage = response.assets[0];
-                    const initialState = imagePengerjaan.map(obj => obj);
+                    // console.log('tes12 : '+response_prework);
+                    // const initialState = response_prework.map(obj => obj);
                     dataImage.from = 'local';
                     // setResponses([...responses, dataImage])
-                    if(imagePengerjaan[index]){
+                    if(response_prework[index]){
                         initialState[index] = dataImage
                         // imagePengerjaan[index] = dataImage
                         // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
                         // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
                         // setResponses([...responses])
            
-                        setImagePengerjaan(initialState)  
+                        set_response_prework(initialState)  
                         setTest('Halo 2')
                     }else{
-                        setImagePengerjaan([...imagePengerjaan, dataImage])
+                        set_response_prework([...response_prework, dataImage])
                         // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
 
                     }
@@ -303,6 +354,86 @@ const editstatus = ({navigation, route}) => {
             }
         )
         // alert(index)
+    }
+
+    const getImage = (index) => {
+        
+        
+        Alert.alert(
+            'Bukti Foto',
+            `Galery atau Camera? `,
+            [
+                {
+                    text : 'Galery',
+                    onPress : () =>  launchImageLibrary(
+                        {
+                            mediaType: 'photo',
+                            includeBase64: true,
+                            maxHeight: 500,
+                            maxWidth: 500,
+                        },
+                        (response) => {
+                            if(response.assets){
+                                let dataImage = response.assets[0];
+                                const initialState = imagePengerjaan.map(obj => obj);
+                                dataImage.from = 'local';
+                                // setResponses([...responses, dataImage])
+                                if(imagePengerjaan[index]){
+                                    initialState[index] = dataImage
+                                    // imagePengerjaan[index] = dataImage
+                                    // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
+                                    // setResponses([...responses])
+                       
+                                    setImagePengerjaan(initialState)  
+                                    setTest('Halo 2')
+                                }else{
+                                    setImagePengerjaan([...imagePengerjaan, dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
+            
+                                }
+                            }
+                        }
+                    )
+                },
+                {
+                    text : 'Camera',
+                    onPress : () =>      launchCamera(
+                        {
+                            mediaType: 'photo',
+                            includeBase64:true,
+                            maxHeight: 500,
+                            maxWidth: 500,
+                        },
+                        (response) => {
+                            if(response.assets){
+                                let dataImage = response.assets[0];
+                                const initialState = imagePengerjaan.map(obj => obj);
+                                dataImage.from = 'local';
+                                // setResponses([...responses, dataImage])
+                                if(imagePengerjaan[index]){
+                                    initialState[index] = dataImage
+                                    // imagePengerjaan[index] = dataImage
+                                    // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
+                                    // setResponses([...responses])
+                       
+                                    setImagePengerjaan(initialState)  
+                                    setTest('Halo 2')
+                                }else{
+                                    setImagePengerjaan([...imagePengerjaan, dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
+            
+                                }
+                            }
+                        }
+                    )
+                    // alert(index)
+                }
+            ]
+        )
+
+        
     }
     // image index pengerjaan
     const addImageIndex = () => {
@@ -332,36 +463,80 @@ const editstatus = ({navigation, route}) => {
     }
 
     const getImageDone = (index) => {
-        launchCamera(
-            {
-                mediaType: 'photo',
-                includeBase64:true,
-                maxHeight: 500,
-                maxWidth: 500,
-            },
-            (response) => {
-                if(response.assets){
-                    let dataImage = response.assets[0];
-                    const initialState = responses_done.map(obj => obj);
-                    dataImage.from = 'local';
-                    // setResponses([...responses, dataImage])
-                    if(responses_done[index]){
-                        initialState[index] = dataImage
-                        // imagePengerjaan[index] = dataImage
-                        // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
-                        // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
-                        // setResponses([...responses])
-           
-                        setResponsesDone(initialState)  
-                        setTest('Halo 2')
-                    }else{
-                        setResponsesDone([...responses_done, dataImage])
-                        // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
 
-                    }
+        Alert.alert(
+            'Bukti Foto',
+            `Galery atau Camera? `,
+            [
+                {
+                    text : 'Galery',
+                    onPress : () =>  launchImageLibrary(
+                        {
+                            mediaType: 'photo',
+                            includeBase64: true,
+                            maxHeight: 500,
+                            maxWidth: 500,
+                        },
+                        (response) => {
+                            if(response.assets){
+                                let dataImage = response.assets[0];
+                                const initialState = responses_done.map(obj => obj);
+                                dataImage.from = 'local';
+                                // setResponses([...responses, dataImage])
+                                if(responses_done[index]){
+                                    initialState[index] = dataImage
+                                    // imagePengerjaan[index] = dataImage
+                                    // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
+                                    // setResponses([...responses])
+                       
+                                    setResponsesDone(initialState)  
+                                    setTest('Halo 2')
+                                }else{
+                                    setResponsesDone([...responses_done, dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
+            
+                                }
+                            }
+                        }
+                    )
+                },
+                {
+                    text : 'Camera',
+                    onPress : () =>         launchCamera(
+                        {
+                            mediaType: 'photo',
+                            includeBase64:true,
+                            maxHeight: 500,
+                            maxWidth: 500,
+                        },
+                        (response) => {
+                            if(response.assets){
+                                let dataImage = response.assets[0];
+                                const initialState = responses_done.map(obj => obj);
+                                dataImage.from = 'local';
+                                // setResponses([...responses, dataImage])
+                                if(responses_done[index]){
+                                    initialState[index] = dataImage
+                                    // imagePengerjaan[index] = dataImage
+                                    // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
+                                    // setResponses([...responses])
+                       
+                                    setResponsesDone(initialState)  
+                                    setTest('Halo 2')
+                                }else{
+                                    setResponsesDone([...responses_done, dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
+            
+                                }
+                            }
+                        }
+                    )
                 }
-            }
+            ]
         )
+      
     }
 
     const handleForm = (key, value) => {
@@ -447,7 +622,7 @@ const editstatus = ({navigation, route}) => {
         let dataUpload=[];
         let dataQtyImage = 1;
         let sendData = false
-        if(form.action_id != '' && form.memo !='' && response_prework.uri !='' && responses_tools.uri !=''){
+        if(form.action_id != '' && form.memo !='' && response_prework.uri !=''){
            
             setLoading(true)
             dataUpload =       
@@ -464,9 +639,7 @@ const editstatus = ({navigation, route}) => {
                    if(action.status == 'pending' && response_prework.base64=='' ){
                         alert('Foto Sebelum Pengerjaan Tidak Boleh Kosong')
                         setLoading(false)
-                   }else if(action.status == 'pending' && responses_tools.base64 ==''){
-                        alert('Foto Alat Pengerjaan Tidak Boleh Kosong')
-                        setLoading(false)
+                   
                    }else{
 
                         dataUpload.push(                       {
@@ -474,11 +647,7 @@ const editstatus = ({navigation, route}) => {
                             'filename' : response_prework.fileName,
                             'data' : response_prework.base64
                         });
-                        dataUpload.push(    {
-                            'name' : 'image_tools' ,
-                            'filename' : responses_tools.fileName,
-                            'data' : responses_tools.base64
-                        });
+                      
                         sendData = true
                    }
                 // }else{
@@ -515,10 +684,29 @@ const editstatus = ({navigation, route}) => {
                     //         dataQtyImage++;
                     //     }
                     // }
-                let dataQtyImagePengerjaan =1;
-                if(imagePengerjaan.length ==2){
+
+        
+                //    if(action.status == 'active' && responses_tools.base64 ==''){
+                //         alert('Foto Alat Pengerjaan Tidak Boleh Kosong')
+                //         setLoading(false)
+                //    }else{
+
+                //     dataUpload.push(    {
+                //         'name' : 'image_tools' ,
+                //         'filename' : responses_tools.fileName,
+                //         'data' : responses_tools.base64
+                //     });
+                //     alert('check 2')
+                //         sendData = true
+                //    }
+                // console.log('testaaa '+action.image_tools)
+                let dataQtyImagePengerjaan = 1;
+                // console.log('data test '+ JSON.stringify(dataUpload))
+                if( imagePengerjaan.length >= 2 && imagePengerjaan.length <= 4){
+                    // console.log('test'+imagePengerjaan.length);
                     for(let index = 0; index < imagePengerjaan.length; index++){
-                       if(imagePengerjaan[index].base64 ){
+                       if(imagePengerjaan[index] ){
+                        // console.log('abcd test '+responses_tools.base64)
                             dataUpload.push({
                                 'name' : 'image' + dataQtyImagePengerjaan,
                                 'filename' : imagePengerjaan[index].fileName,
@@ -526,29 +714,56 @@ const editstatus = ({navigation, route}) => {
                             })
                             dataQtyImagePengerjaan++;
                        }
-                    //    else{
-                    //        alert('image no ' + dataQtyImagePengerjaan + ' tidak ditemukan');
-                    //        setLoading(false)
-                    //        break;
-                    //    }
+   
+                       else{
+                        // console.log('ffggg '+imagePengerjaan[index].base64);
+                           alert('image no ' + dataQtyImagePengerjaan + ' tidak ditemukan');
+                           setLoading(false)
+                           break;
+                       }
                     }
+                    dataUpload.push( {
+                          'name' : 'countImagePengerjaan',
+                          'data' : JSON.stringify(imagePengerjaan.length)
+                        })
+                   
+                    // console.log('kkk '+imagePengerjaan.length)
+
+                    if(action.status == 'active' && responses_tools.base64 =='' && action.image_tools ==null){
+                        // console.log('test'+action.image_tools)
+                        alert('Foto Alat Pengerjaan Tidak Boleh Kosong')
+                        setLoading(false)
+                   }else{
+
+                    dataUpload.push(    {
+                        'name' : 'image_tools' ,
+                        'filename' : responses_tools.fileName,
+                        'data' : responses_tools.base64
+                    });
+                    // alert('check 4')
                     sendData= true;
-                }else{
-                    alert('Foto Pengerjaan Harus 2')
+                }
+                
+                }
+               
+                else{
+                    alert('Foto Pengerjaan Harus 2-4')
                     setLoading(false)
                 } 
            
             }else{
-                
+                // alert('test5');
                 let dataQtyImageDone =1;
                 if(responses_done.length ==2){
                     for(let index = 0; index < responses_done.length; index++){
-                       if(responses_done[index].base64 ){
+                       if(responses_done[index].base64){
+                        // console.log('abc test '+responses_tools.base64)
                             dataUpload.push({
                                 'name' : 'image_done' + dataQtyImageDone,
                                 'filename' : responses_done[index].fileName,
                                 'data' : responses_done[index].base64
                             })
+                            
                             dataQtyImageDone++;
                        }else{
                            alert('image no ' + dataQtyImageDone + ' tidak ditemukan');
@@ -558,6 +773,7 @@ const editstatus = ({navigation, route}) => {
                     }
                     sendData= true;
                 }else{
+                   
                     alert('Foto Setelah Pengerjaan Harus 2')
                     setLoading(false)
                 }
@@ -572,6 +788,9 @@ const editstatus = ({navigation, route}) => {
         }
 
         if(sendData){
+            // console.log('data test '+dataUpload[0][0])
+          
+            // console.log('abcde test '+imagePengerjaan.length)
             RNFetchBlob.fetch(
                 'POST',
                 'https://simpletabadmin.ptab-vps.com/api/close/admin/actionStatusUpdate',
@@ -586,11 +805,11 @@ const editstatus = ({navigation, route}) => {
             ).then((result) => {
                 setLoading(false)
                 let data = JSON.parse(result.data);
-                console.log(result);
+                // console.log(result);
                 alert(data.message)
                 navigation.navigate('Action')
             }).catch((e) => {
-                console.log(e);
+                // console.log(e);
                 setLoading(false)
             })
         }
@@ -656,28 +875,59 @@ const editstatus = ({navigation, route}) => {
                                         <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
                                             <Image
                                                 style={{width:'90%', height: 200}}
-                                                source={response_prework.uri=='' || response_prework.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: response_prework.from=='local' ? response_prework.uri : Config.REACT_APP_BASE_URL + `${String(response_prework.uri).replace('public/', '')}?time="${new Date()}`}}
+                                                source={response_prework.uri=='' || response_prework.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: response_prework.from=='local' ? response_prework.uri : `https://simpletabadmin.ptab-vps.com/` + `${String(response_prework.uri).replace('public/', '')}?time="${new Date()}`}}
                                             />
-                                              </ImageBackground> 
+                                                   </ImageBackground> 
                                             <Distance distanceV={10}/>
                                             <Button
-                                                onPress={() => launchCamera(
-                                                    {
-                                                        mediaType: 'photo',
-                                                        includeBase64:true,
-                                                        maxHeight: 500,
-                                                        maxWidth: 500,
-                                                    },
-                                                    (response) => {
-                                                        console.log('ini respon', response);
-                                                        if(response.assets){
-                                                            let image_prework = response.assets[0];
-                                                            image_prework['from'] = 'local';
-                                                            set_response_prework(image_prework)
-                                                        
-                                                        }
-                                                    }
-                                                )}
+                                                onPress={() => 
+                                                    
+                                                       Alert.alert(
+                                                                'Bukti Foto',
+                                                                `Galery atau Camera? `,
+                                                                [
+                                                                    {
+                                                                        text : 'Galery',
+                                                                        onPress : () =>  launchImageLibrary(
+                                                                            {
+                                                                                mediaType: 'photo',
+                                                                                includeBase64: true,
+                                                                                maxHeight: 500,
+                                                                                maxWidth: 500,
+                                                                            },
+                                                                            (response) => {
+                                                                                if (response.assets) {
+                                                                                    let image_prework = response.assets[0];
+                                                                                    image_prework['from'] = 'local';
+                                                                                    set_response_prework(image_prework);
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                    },
+                                                                    {
+                                                                        text : 'Camera',
+                                                                        onPress : () =>     launchCamera(
+                                                                            {
+                                                                                mediaType: 'photo',
+                                                                                includeBase64:true,
+                                                                                maxHeight: 500,
+                                                                                maxWidth: 500,
+                                                                            },
+                                                                            (response) => {
+                                                                                // console.log('ini respon', response);
+                                                                                if(response.assets){
+                                                                                    let image_prework = response.assets[0];
+                                                                                    image_prework['from'] = 'local';
+                                                                                    set_response_prework(image_prework)
+                                                                                
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                    }
+                                                                ]
+                                                            )
+                                                    
+                                                }
                                                 title="Ambil Foto"
                                                 width="80%"
                                                 backgroundColor='#1DA0E0'
@@ -685,45 +935,83 @@ const editstatus = ({navigation, route}) => {
                                             />
                                       
                                     </View>
-                                        <Txt title ='Foto Alat Pengerjaan'/>
-                                        <View style={{alignItems:'center'}}>
-                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
-                                            <Image
-                                                style={{width:'90%', height: 200}}
-                                                source={responses_tools.uri=='' || responses_tools.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : Config.REACT_APP_BASE_URL + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
-                                            />
-                                        </ImageBackground> 
-                                            <Distance distanceV={10}/>
-                                            <Button
-                                                onPress={() => launchCamera(
-                                                    {
-                                                        mediaType: 'photo',
-                                                        includeBase64:true,
-                                                        maxHeight: 500,
-                                                        maxWidth: 500,
-                                                    },
-                                                    (response) => {
-                                                        console.log('ini respon', response);
-                                                        if(response.assets){
-                                                            let image_tools = response.assets[0];
-                                                            image_tools['from'] = 'local';
-                                                            set_response_tools(image_tools)
-                                                        
-                                                        }
-                                                    }
-                                                )}
-                                                title="Ambil Foto"
-                                                width="80%"
-                                                backgroundColor='#1DA0E0'
-                                                icon = {<FontAwesomeIcon icon={faCamera} color='#ffffff'/>}
-                                            />
-                                        </View>
+                                   
                                     </View>
                                      }
                                         {(action.status == 'active' && form.status =='active')&&
                                         <View>
                                             <Txt title='Foto Pengerjaan'/>
                                             <ButtonImage  test ={test} addImageIndex={addImageIndex} imagePengerjaan = {imagePengerjaan} Image ={getImage} dataImage = {imagePengerjaan} deleteImage={()=>deleteImage()} resetImage={() => resetImage()} qty = {action.image ? JSON.parse(action.image).length : 1}  />
+                                        
+                                            <Txt title ='Foto Alat Pengerjaan'/>
+                                        <View style={{alignItems:'center'}}>
+                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
+                                            <Image
+                                                style={{width:'90%', height: 200}}
+                                                source={responses_tools.uri=='' || responses_tools.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : `https://simpletabadmin.ptab-vps.com/` + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
+                                            />
+                                        </ImageBackground> 
+                                            <Distance distanceV={10}/>
+                                            <Button
+                                                onPress={() => 
+                                                    
+                                                    Alert.alert(
+                                                        'Bukti Foto',
+                                                        `Galery atau Camera? `,
+                                                        [
+                                                            {
+                                                                text : 'Galery',
+                                                                onPress : () =>  launchImageLibrary(
+                                                                    {
+                                                                        mediaType: 'photo',
+                                                                        includeBase64: true,
+                                                                        maxHeight: 500,
+                                                                        maxWidth: 500,
+                                                                    },
+                                                                    (response) => {
+                                                                        if (response.assets) {
+                                                                            let image_tools = response.assets[0];
+                                                                            image_tools['from'] = 'local';
+                                                                            set_response_tools(image_tools);
+                                                                        }
+                                                                    }
+                                                                )
+                                                            },
+                                                            {
+                                                                text : 'Camera',
+                                                                onPress : () =>       launchCamera(
+                                                                    {
+                                                                        mediaType: 'photo',
+                                                                        includeBase64:true,
+                                                                        maxHeight: 500,
+                                                                        maxWidth: 500,
+                                                                    },
+                                                                    (response) => {
+                                                                        // console.log('ini respon', response);
+                                                                        if(response.assets){
+                                                                            let image_tools = response.assets[0];
+                                                                            image_tools['from'] = 'local';
+                                                                            set_response_tools(image_tools)
+                                                                        
+                                                                        }
+                                                                    }
+                                                                )
+                                                            }
+                                                        ]
+                                                    )
+                                                    
+                                                    
+                                                    
+                                                  
+                                            
+                                            
+                                            }
+                                                title="Ambil Foto"
+                                                width="80%"
+                                                backgroundColor='#1DA0E0'
+                                                icon = {<FontAwesomeIcon icon={faCamera} color='#ffffff'/>}
+                                            />
+                                        </View>
                                         </View>
                                         }
                                     {form.status == 'close' &&
