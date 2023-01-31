@@ -1,6 +1,7 @@
 import Header from './Header'
 import HeaderMenu from './Header/HeaderMenu'
 import HeaderForm from './Header/HeaderForm'
+import HeaderForm2 from './Header/HeaderForm2'
 import HeaderView from './Header/HeaderView'
 import HeaderInput from './Header/HeaderInput'
 import HeaderBeranda from './Header/HeaderBeranda'
@@ -32,6 +33,7 @@ export{
     Header,
     HeaderMenu,
     HeaderForm,
+    HeaderForm2,
     HeaderInput,
     HeaderBeranda,
     Title,

@@ -45,6 +45,7 @@ const ViewTicket =({navigation, route})=>{
     const [ticket, setTicket] = useState([]);
     const [category, setCategory] = useState([]);
     const [customer, setCustomer] = useState([]);
+    const [alamat, setAlamat] = useState([]);
     const [fotokeluhan, setFotokeluhan] = useState([]);
     const [fotosebelum, setFotosebelum] = useState([]);
     const [fotoalat, setFotoalat] = useState([]);
@@ -72,6 +73,7 @@ const ViewTicket =({navigation, route})=>{
 
         //   console.log('test23 '+JSON.stringify(result.data.action[0].image))
 setCustomer(result.data.customer.namapelanggan)
+setAlamat(result.data.customer.alamat)
 setCategory(result.data.category.name)
 setFotoalat(result.fotoalat)
 setFotokeluhan(result.fotokeluhan)
@@ -79,11 +81,15 @@ console.log('test g ' +result.fotokeluhan)
 setFotopengerjaan(result.fotopengerjaan);
 setFotosebelum(result.fotosebelum);
 setFotoselesai(result.fotoselesai);
-console.log('test p ' +result.data.action.length)
+
 setpFotokeluhan(result.fotokeluhan.length)
 if(result.fotopengerjaan != null){
 setpFotopengerjaan(result.fotopengerjaan.length);
 }
+if(result.fotoalat!= null){
+    setpFotoalat(result.fotoalat.length);
+    console.log('test p ',result.fotopengerjaan.length)
+    }
 if(result.fotoselesai != null){
 setpFotoselesai(result.fotoselesai.length);
 }
@@ -118,10 +124,14 @@ result.fotopengerjaan != null && result.fotopengerjaan != null && result.fotopen
     url: `https://simpletabadmin.ptab-vps.com` + `${String(result.fotosebelum).replace('public/', '')}?time="${new Date()}`,
           })
 setImagesPrework(d2)
-         d3.push({
-    url: `https://simpletabadmin.ptab-vps.com` + `${String(result.fotoalat).replace('public/', '')}?time="${new Date()}`,
-          })
-          setImagesTools(d3)
+
+result.fotoalat != null && result.fotoalat != null && result.fotoalat.map((item, index) => {
+    d3.push({
+     url: `https://simpletabadmin.ptab-vps.com` + `${String(item).replace('public/', '')}`,
+    })
+    })
+    setImagesTools(d3)
+         console.log('j123', d3)
 
           result.fotoselesai != null && result.fotoselesai.map((item, index) => {
           d4.push({
@@ -158,6 +168,7 @@ setImagesPrework(d2)
 
             //   console.log('test23 '+JSON.stringify(result.data.action[0].image))
 setCustomer(result.data.customer.namapelanggan)
+setAlamat(result.data.customer.alamat)
 setCategory(result.data.category.name)
 setFotoalat(result.fotoalat)
 setFotokeluhan(result.fotokeluhan)
@@ -204,9 +215,12 @@ result.fotopengerjaan != null && result.fotopengerjaan != null && result.fotopen
         url: `https://simpletabadmin.ptab-vps.com` + `${String(result.fotosebelum).replace('public/', '')}?time="${new Date()}`,
               })
  setImagesPrework(d2)
+
+ result.fotoalat != null && result.fotoalat != null && result.fotoalat.map((item, index) => {
              d3.push({
-        url: `https://simpletabadmin.ptab-vps.com` + `${String(result.fotoalat).replace('public/', '')}?time="${new Date()}`,
+        url: `https://simpletabadmin.ptab-vps.com` + `${String(item).replace('public/', '')}?time="${new Date()}`,
               })
+            })
               setImagesTools(d3)
 
               result.fotoselesai != null && result.fotoselesai.map((item, index) => {
@@ -335,6 +349,7 @@ return(
              <DataView title='Status' txt={ticket.status}/>
              <DataView title='Kategori' txt={category}/>
              <DataView title='Nama Pelanggan' txt={customer}  />
+             <DataView title='Alamat' txt={alamat}  />
              <DataView title='Location' icon={faMapMarked} txt='Lihat Lokasi' color ='blue' onPress={()=>navigation.navigate('Maps', {lat : ticket.lat, lng : ticket.lng})}/>
              <DataView title='Bukti Foto Keluhan'/>
              <Modal visible={showImage} transparent={true} enablePreload={true}
@@ -403,8 +418,7 @@ return(
              {/* <Text onPress={()=>console.log('data ticket ini',ticket.action[0].image)}>Test</Text> */}
      {ticket.status !='pending' && 
          <View>
-             {/* <DataView title='Memo Pengerjaan' txt={ticket.action.length >0 ? ticket.action[ticket.action.length-1].memo : null}/> */}
-             <DataView title='Foto Sebelum'/>
+                   <DataView title='Foto Sebelum'/>
                  <Modal visible={ShowImagePrework} transparent={true} enablePreload={true}
                      onRequestClose={() => setShowImagePrework(false)}
                      onDoubleClick={() => setShowImagePrework(true)}
@@ -420,7 +434,44 @@ return(
                      </ImageBackground>
                  </TouchableHighlight>
              <Distance distanceV={5}/>
-             <DataView title='Foto Alat'/>
+
+             {fotoalat != null && 
+         <View>
+             
+             <DataView title='Foto Tools' />
+             <Modal visible={ShowImageTools} transparent={true} enablePreload={true}
+                 onRequestClose={() => setShowImageTools(false)}
+                 onDoubleClick={() => setShowImageTools(true)}
+             >
+                 <ImageViewer imageUrls={imagesTools}/>
+             </Modal>
+             <View style={{width:'90%'}}>
+                 <TouchableHighlight onPress ={fotoalat != null ? () =>{ setShowImageTools(true);} : null}>
+                 <ScrollView style={{flexDirection:'row',}}horizontal={true}>
+                 <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{ height : 220, width : 280}} >
+                     {fotoalat && fotoalat.map((item,index) => {
+                             return (
+                                 <View  key={index}  style={{marginVertical:5}}>
+                                     
+                                     <Image
+                                         key={index}
+                                         onLoadEnd={() => {setLoadingImage(false); console.log(String(item).replace('public/', ''));}}
+                                         source = {{uri : `https://simpletabadmin.ptab-vps.com` + `${String(item).replace('public/', '')}?time="${new Date()}`}}
+                                         style={{height: 220, width: 280, marginRight: 10, resizeMode : 'stretch'}}
+                                     /> 
+                                   
+                                 </View>
+                                 
+                             )
+                         })} 
+                 </ImageBackground>
+                 </ScrollView>  
+                 </TouchableHighlight>
+             </View>
+             <Distance distanceV={5}/>
+         </View>
+         }
+             {/* <DataView title='Foto Alat'/>
              <Modal visible={ShowImageTools} transparent={true} enablePreload={true}
                      onRequestClose={() => setShowImageTools(false)}
                      onDoubleClick={() => setShowImageTools(true)}
@@ -434,7 +485,7 @@ return(
                          source = {{uri : `https://simpletabadmin.ptab-vps.com` + `${String(fotoalat).replace('public/', '')}?time="${new Date()}`}}
                      />
                  </ImageBackground>
-             </TouchableHighlight>
+             </TouchableHighlight> */}
              <Distance distanceV={5}/>
             
              </View>
