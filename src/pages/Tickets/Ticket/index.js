@@ -2,12 +2,13 @@ import { faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View, Alert, Image,ScrollView,ImageBackground } from 'react-native';
+import { Dimensions, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View, Alert, Image,ScrollView,ImageBackground, TouchableOpacity, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Btn, BtnAdd, BtnDelete, BtnAction, BtnDetail, BtnEdit, Footer, HeaderForm, Spinner, Title, Dropdown } from '../../../component';
+import { Btn, BtnAdd, BtnDelete, BtnAction, BtnDetail, BtnEdit, Footer, HeaderForm2, Spinner, Title, Dropdown } from '../../../component';
 import API from '../../../service';
 import { colors, Distance } from '../../../utils';
 import Config from 'react-native-config';
+
 
 const TextInfo = (props) => {
     return (
@@ -42,11 +43,15 @@ const Ticket = ({ navigation }) => {
     const USER = useSelector((state) => state.UserReducer);
     const [refresh, setRefresh] = useState(false)
     var resetData = false;
+    const [find, setFind] = useState()
 
     const handleLoadMore = () => {
         if (page < lastPage) {
             setPage(page + 1);
         }
+        else(
+            console.log('test3')
+        )
     }
 
     useEffect(() => {
@@ -62,17 +67,19 @@ const Ticket = ({ navigation }) => {
 
     const getData = async () => {
         // console.log(resetData);
-        API.ticketList({ 'page': page, status: cari, userid: USER.id }, TOKEN).then((result) => {
-            console.log('hasil data', result)
+        console.log('data', cari,find)
+        API.ticketList({ 'page': page, status: cari, search: find, userid: USER.id }, TOKEN).then((result) => {
+            // console.log('hasil data', result.data.data)
             if (page > 1) {
                 setTicket(ticket.concat(result.data.data))
                 // resetData = false
+                console.log('delete1', page);
             } else {
                 setTicket(result.data.data)
-                console.log('delete');
+                console.log('delete2', page);
             }
             setLastPage(result.data.last_page)
-            console.log('tiket data',result.data);
+            console.log('tiket data',page);
             setLoading(false)
             setRefresh(false)
         }).catch(e => {
@@ -93,14 +100,14 @@ const Ticket = ({ navigation }) => {
 
     useEffect(() => {
       getData()
-   
-     
      
     }, [refresh])
 
     const filter = () => {
+        console.log(cari)
         setLoading(true)
         resetData = true
+        Keyboard.dismiss()
         getData();
         // alert(cari)
     }
@@ -150,11 +157,27 @@ const Ticket = ({ navigation }) => {
         const imagefoto = item.ticket_image.length >0 ? (JSON.parse(item.ticket_image[0].image)[0]) : null
         var colorStatus = '';
         var borderStatus = '';
-        if (item.status == 'active') {
+        // if (item.status == 'active' && item.action.length > 0) {
+        //     var colorStatus = '#B2BEB5';
+        //     var borderStatus = '#CAFEC0'
+
+        // }
+        if (item.status == 'pending' && item.action.length > 0) {
+            var colorStatus = '#B2BEB5';
+            var borderStatus = '#FFF6C2'
+
+        }
+        else if (USER.dapertement_id === 1 && item.status == 'pending' && item.dapertement_id > 1 && item.action.length < 1) {
+            var colorStatus = '#B2BEB5';
+            var borderStatus = '#FFF6C2'
+
+        }
+        else if (item.status == 'active') {
             var colorStatus = '#7DE74B';
             var borderStatus = '#CAFEC0'
 
-        } else if (item.status == 'pending') {
+        }
+        else if (item.status == 'pending') {
             var colorStatus = '#F0D63C';
             var borderStatus = '#FFF6C2'
         } else {
@@ -188,6 +211,10 @@ const Ticket = ({ navigation }) => {
                             <TextInfo title='Tanggal' item={item.created_at} />
                             <TextInfo title='Nama' item={item.customer.namapelanggan + '-' + item.customer_id} />
                             <TextInfo title='Telfon' item={item.customer.telp} />
+                            {item.customer_id !="99900001" &&
+                            <TextInfo title='Alamat' item={item.customer.alamat} />
+                            }
+                            
                             <TextInfo title='Code' item={item.code } />
                             <TextInfo title='Kategori' item={item.category.name} />
                             <TextInfo title='Deskripsi' item={item.description} />
@@ -226,7 +253,7 @@ const Ticket = ({ navigation }) => {
             <View style={styles.container}>
 
                 {/* header */}
-                <HeaderForm />
+                <HeaderForm2 />
                 <View style={{ paddingHorizontal: 20 }}>
                     <Title title='Tiket' />
                     {Permission.includes('ticket_create') &&
@@ -238,6 +265,7 @@ const Ticket = ({ navigation }) => {
                         />
                     }
                     <Distance distanceV={10} />
+                    <TextInput style={styles.search} value={find} placeholder={"No.SBG"} onChangeText={(item) => setFind(item)} ></TextInput>
                     <View style={{ flexDirection: 'row' }}>
                         {/* <TextInput style={styles.search} value={cari} onChangeText={(item) => setCari(item)} ></TextInput> */}
                         
@@ -252,6 +280,7 @@ const Ticket = ({ navigation }) => {
                                 ]}
                                 onChangeValue={(item) => {
                                     setCari(item)
+                                    console.log(cari)
                                 }}
                             />
                        </View>
@@ -268,7 +297,7 @@ const Ticket = ({ navigation }) => {
                     <Distance distanceV={10} />
                 </View>
                 {/*batas headxer  */}
-
+{/* {console.log('user',USER)} */}
                 <FlatList
                     // ListHeaderComponent={<Text>Hallo</Text>}
                     keyExtractor={(item, index) => index.toString()}
@@ -278,16 +307,23 @@ const Ticket = ({ navigation }) => {
                     renderItem={renderItem}
                     ListFooterComponent={loading ? <Text>Sedang Memuat</Text> : null}
                     onEndReached={handleLoadMore}
-                    onEndReachedThreshold={0}
+                    onEndReachedThreshold={1}
                     onRefresh={onRefresh}
                     refreshing={refresh}
+                    
                 />
             </View>
             {/* </ScrollView> */}
+            {/* <View>
+                <TouchableOpacity onPress={()=>handleLoadMore()}>
+                   <Text> Cek {ticket.length} </Text>
+                </TouchableOpacity>
+            </View> */}
             <Footer navigation={navigation} focus='Menu' />
         </SafeAreaView>
     )
 }
+const windowWidht =Dimensions.get('window').width;
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
@@ -296,7 +332,8 @@ const styles = StyleSheet.create({
     },
     content: {
         borderWidth: 3,
-        width: Dimensions.get('screen').width - 45,
+        // width: Dimensions.get('screen').width - 45,
+         width: windowWidht*0.82,
         borderRadius: 10,
         padding: 10,
         backgroundColor: '#FFFFFF'
@@ -307,6 +344,7 @@ const styles = StyleSheet.create({
         width: '60%',
         borderRadius: 4,
         borderWidth: 1,
+        marginBottom : 10,
         borderColor: colors.border,
         paddingHorizontal: 20
     },

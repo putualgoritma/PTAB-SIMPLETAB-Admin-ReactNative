@@ -9,7 +9,7 @@ const TxtArea =(props)=>{
             <Textarea
               containerStyle={styles.textareaContainer}
               style={styles.textarea}
-              maxLength={255}
+              maxLength={1000}
               placeholder={props.placeholder}
               placeholderTextColor={'#c7c7c7'}
               value={props.value}

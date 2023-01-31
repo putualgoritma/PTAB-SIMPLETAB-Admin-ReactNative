@@ -80,7 +80,7 @@ const ButtonImage = (props) => {
 
             {myloop}
             <View style={{ flexDirection: 'row', alignItems: 'center', width: '80%', marginVertical: 10 }}>
-                {(props.dataImage[qty - 1] != null) &&
+                {(props.dataImage[qty - 1] != null) && props.dataImage.length <= 5 &&
                     <TouchableOpacity style={{ flexDirection: 'row', height: 40, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.success, paddingHorizontal: 10, borderRadius: 5 }} onPress={() => { setQty(qty + 1); setShow(true) }}>
                         <FontAwesomeIcon icon={faPlusCircle} size={20} color={'#FFFFFF'} />
                         <Text style={{ color: '#ffffff', fontWeight: 'bold', fontSize: 15, marginLeft: 3 }}>Tambah</Text>

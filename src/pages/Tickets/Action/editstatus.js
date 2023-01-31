@@ -144,6 +144,68 @@ const ButtonImageDone = (props) => {
 }
 
 
+const ButtonImageTool = (props) => {
+    const [qtyTool, setQtyTool] = useState(props.qty)
+    const [showTool, setShowTool] = useState(true)
+    var mylooptool = [];
+    for(let indexTool = 0; indexTool < qtyTool; indexTool ++){
+        mylooptool.push(
+            <View key={indexTool} >
+                <View  style={{marginVertical:10,  height : 200, alignItems : 'center'}}>
+                <Image
+                        style={{width:'90%', height: 200}}
+                        // source={props.dataImage[index]==null ? require('../../../assets/img/ImageFoto.png') :{uri: props.dataImage[index].uri}}
+                        source={props.image_tool[indexTool].uri=='' ? require('../../../assets/img/ImageFoto.png') : ({uri : props.image_tool[indexTool].from == 'local' ? props.image_tool[indexTool].uri : `https://simpletabadmin.ptab-vps.com/` + `${String(props.image_tool[indexTool].uri).replace('public/', '')}?time="${new Date()}` })}
+                    />
+                </View>
+                {props.image_tool[indexTool].uri =='' &&
+                    <View style={{alignItems : 'center'}}>
+                    <Button
+                        onPress={() =>
+                            {
+                                
+                                props.ImageTool(indexTool); props.image_tool ? setShowTool(false) : null}}
+                            title="Ambil Foto"
+                            width="80%"
+                            backgroundColor='#1DA0E0'
+                            icon = {<FontAwesomeIcon icon={faCamera} color='#ffffff'/>}
+                        />
+                      
+                    </View>
+                }
+            </View>
+        )
+    }
+
+    return (
+        <View >
+            {mylooptool}
+            <View style={{alignItems:'center'}}>
+        
+            <View style={{flexDirection : 'row',alignItems:'center',flex:1, marginVertical:10}}>
+                {(props.image_tool[qtyTool-1].uri != '') &&
+                <TouchableOpacity style={{flexDirection:'row',height:40,justifyContent:'center',alignItems:'center',backgroundColor :colors.success,paddingHorizontal:10, borderRadius : 5}} onPress={() => {props.addImageToolIndex();setQtyTool(qtyTool + 1); setShowTool(true)}}>
+                     <FontAwesomeIcon icon={faPlusCircle} size={20} color={'#FFFFFF'}/>
+                    <Text style={{color:'#ffffff', fontWeight : 'bold',fontSize:15,  marginLeft:3}}>Tambah</Text>
+                </TouchableOpacity>
+                }
+                <View style={{marginHorizontal:3}} />
+                <TouchableOpacity style={{backgroundColor :colors.delete, flexDirection:'row',paddingHorizontal:10,height:40,justifyContent:'center',alignItems:'center', borderRadius : 5}} onPress={() => {qtyTool > 1 ? setQtyTool(qtyTool - 1) : alert('data tidak boleh dihapus'); props.deleteImageTool()}}>
+                        <FontAwesomeIcon icon={faTrash} size={17} color={'#FFFFFF'}/>
+                        <Text style={{color:'#ffffff', fontWeight : 'bold',fontSize:15,  marginLeft:3}}>Delete </Text>
+                </TouchableOpacity>
+                <View style={{marginHorizontal:3}} />
+                <TouchableOpacity style={{backgroundColor :colors.detail, flexDirection:'row',paddingHorizontal:10,height:40,justifyContent:'center',alignItems:'center', borderRadius : 5}} onPress={() => {setQtyTool(1); props.resetImageTool()}}>
+                    <FontAwesomeIcon icon={faUndo} size={17} color={'#FFFFFF'}/>
+                    <Text style={{color:'#ffffff', fontWeight : 'bold'}}>Reset</Text>
+                </TouchableOpacity>
+            </View>
+            </View>
+        </View>
+    )
+}
+
+
 const editstatus = ({navigation, route}) => {
     const image = require('../../../assets/img/BackgroundInput.png')
     const action = route.params.item;
@@ -191,16 +253,35 @@ const editstatus = ({navigation, route}) => {
         width: 0,
         from :'api'
     });
-    const [responses_tools, set_response_tools] = useState({
-        base64: "",
-        fileName: "",
-        fileSize: 0,
-        height: 0,
-        type: "",
-        uri: action.image_tools ,
-        width: 0,
-        from:'api'
-    });
+
+    const [responses_tools, set_response_tools] = useState(
+        action.image_tools ? 
+        JSON.parse( action.image_tools).map((item) => {
+          let data = {
+                  base64: "",
+                  fileName: "",
+                  fileSize: 0,
+                  height: 0,
+                  type: "",
+                  uri: item ,
+                  width: 0,
+                  from : 'api'
+              }  
+  
+              return data
+          }) : 
+         [ {
+             base64: "",
+             fileName: "",
+             fileSize: 0,
+             height: 0,
+             type: "",
+             uri: '' ,
+             width: 0,
+             from : ''
+         }  ]
+    );
+
     const [responses_done, setResponsesDone] = useState(
         action.image_done ? 
         JSON.parse( action.image_done).map((item) => {
@@ -462,6 +543,19 @@ const editstatus = ({navigation, route}) => {
         }])
     }
 
+    const addImageToolIndex = (index) => {
+        set_response_tools([...responses_tools, {
+            base64: "",
+            fileName: "",
+            fileSize: 0,
+            height: 0,
+            type: "",
+            uri: '' ,
+            width: 0,
+            from : ''
+        }])
+    }
+
     const getImageDone = (index) => {
 
         Alert.alert(
@@ -539,6 +633,84 @@ const editstatus = ({navigation, route}) => {
       
     }
 
+
+    const getImageTool = (index) => {
+
+        Alert.alert(
+            'Bukti Foto',
+            `Galery atau Camera? `,
+            [
+                {
+                    text : 'Galery',
+                    onPress : () =>  launchImageLibrary(
+                        {
+                            mediaType: 'photo',
+                            includeBase64: true,
+                            maxHeight: 500,
+                            maxWidth: 500,
+                        },
+                        (response) => {
+                            if(response.assets){
+                                let dataImage = response.assets[0];
+                                const initialState = responses_tools.map(obj => obj);
+                                dataImage.from = 'local';
+                                // setResponses([...responses, dataImage])
+                                if(responses_tools[index]){
+                                    initialState[index] = dataImage
+                                    // imagePengerjaan[index] = dataImage
+                                    // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
+                                    // setResponses([...responses])
+                       
+                                    set_response_tools(initialState)  
+                                    setTest('Halo 2')
+                                }else{
+                                    set_response_tools([...responses_done, dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
+            
+                                }
+                            }
+                        }
+                    )
+                },
+                {
+                    text : 'Camera',
+                    onPress : () =>         launchCamera(
+                        {
+                            mediaType: 'photo',
+                            includeBase64:true,
+                            maxHeight: 500,
+                            maxWidth: 500,
+                        },
+                        (response) => {
+                            if(response.assets){
+                                let dataImage = response.assets[0];
+                                const initialState = responses_tools.map(obj => obj);
+                                dataImage.from = 'local';
+                                // setResponses([...responses, dataImage])
+                                if(responses_tools[index]){
+                                    initialState[index] = dataImage
+                                    // imagePengerjaan[index] = dataImage
+                                    // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
+                                    // setResponses([...responses])
+                       
+                                    set_response_tools(initialState)  
+                                    setTest('Halo 2')
+                                }else{
+                                    set_response_tools([...responses_tools, dataImage])
+                                    // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
+            
+                                }
+                            }
+                        }
+                    )
+                }
+            ]
+        )
+      
+    }
+
     const handleForm = (key, value) => {
         setForm({
             ...form, 
@@ -588,6 +760,26 @@ const editstatus = ({navigation, route}) => {
         }
     }
 
+    const deleteImageTool = () => {
+        if(responses_done.length ==1){
+            set_response_tools([{
+                base64: "",
+                fileName: "",
+                fileSize: 0,
+                height: 0,
+                type: "",
+                uri: '' ,
+                width: 0,
+                from : ''
+            }])
+        }
+        if (responses_tools.length > 1) {
+            const lastIndex = responses_tools.length - 1;
+            set_response_tools(responses_tools.filter((item, index) => index !== lastIndex));
+            
+        }
+    }
+
     const resetImage = () => {
         if (imagePengerjaan.length > 0) {
             setImagePengerjaan([{
@@ -606,6 +798,21 @@ const editstatus = ({navigation, route}) => {
     const resetImageDone = () => {
         if (responses_done.length > 0) {
             setResponsesDone([{
+                base64: "",
+                fileName: "",
+                fileSize: 0,
+                height: 0,
+                type: "",
+                uri: '' ,
+                width: 0,
+                from : ''
+            }]);
+        }
+    }
+
+    const resetImageTool = () => {
+        if (responses_tools.length > 0) {
+            set_response_tools([{
                 base64: "",
                 fileName: "",
                 fileSize: 0,
@@ -729,20 +936,9 @@ const editstatus = ({navigation, route}) => {
                    
                     // console.log('kkk '+imagePengerjaan.length)
 
-                    if(action.status == 'active' && responses_tools.base64 =='' && action.image_tools ==null){
-                        // console.log('test'+action.image_tools)
-                        alert('Foto Alat Pengerjaan Tidak Boleh Kosong')
-                        setLoading(false)
-                   }else{
-
-                    dataUpload.push(    {
-                        'name' : 'image_tools' ,
-                        'filename' : responses_tools.fileName,
-                        'data' : responses_tools.base64
-                    });
                     // alert('check 4')
-                    sendData= true;
-                }
+                    // sendData= true;
+                
                 
                 }
                
@@ -750,11 +946,53 @@ const editstatus = ({navigation, route}) => {
                     alert('Foto Pengerjaan Harus 2-4')
                     setLoading(false)
                 } 
+
+
+                // test baru
+                let dataQtyImageTool = 1;
+                // console.log('data test '+ JSON.stringify(dataUpload))
+                if( responses_tools.length >= 1 && responses_tools.length <= 3){
+                    // console.log('test'+imagePengerjaan.length);
+                    for(let index = 0; index < responses_tools.length; index++){
+                       if(responses_tools[index] ){
+                        // console.log('abcd test '+responses_tools.base64)
+                            dataUpload.push({
+                                'name' : 'image_tools' + dataQtyImageTool,
+                                'filename' : responses_tools[index].fileName,
+                                'data' : responses_tools[index].base64
+                            })
+                            dataQtyImageTool++;
+                       }
+   
+                       else{
+                        // console.log('ffggg '+responses_tools[index].base64);
+                           alert('image no ' + dataQtyImageTool + ' tidak ditemukan');
+                           setLoading(false)
+                           break;
+                       }
+                    }
+                    dataUpload.push( {
+                          'name' : 'countImageTool',
+                          'data' : JSON.stringify(responses_tools.length)
+                        })
+                   
+                    console.log('kkk '+responses_tools.length)
+                    // alert('check 4')
+                    sendData= true;
+                
+                
+                }
+               
+                else{
+                    alert('Foto Pengerjaan Harus 1-3')
+                    setLoading(false)
+                } 
            
             }else{
                 // alert('test5');
                 let dataQtyImageDone =1;
-                if(responses_done.length ==2){
+                // responses_tools.length >= 1 && responses_tools.length <= 3
+                if(responses_done.length >= 2 && responses_done.length <= 6){
                     for(let index = 0; index < responses_done.length; index++){
                        if(responses_done[index].base64){
                         // console.log('abc test '+responses_tools.base64)
@@ -771,10 +1009,16 @@ const editstatus = ({navigation, route}) => {
                            break;
                        }
                     }
+
+                    dataUpload.push( {
+                        'name' : 'countImageDone',
+                        'data' : JSON.stringify(responses_done.length)
+                      })
+                      
                     sendData= true;
                 }else{
                    
-                    alert('Foto Setelah Pengerjaan Harus 2')
+                    alert('Foto Setelah Pengerjaan Harus 2 - 6')
                     setLoading(false)
                 }
                 // alert('ini untuk status close')
@@ -793,7 +1037,7 @@ const editstatus = ({navigation, route}) => {
             // console.log('abcde test '+imagePengerjaan.length)
             RNFetchBlob.fetch(
                 'POST',
-                'https://simpletabadmin.ptab-vps.com/api/close/admin/actionStatusUpdate',
+                'https://simpletabadmin.ptab-vps.com/api/close/admin1/actionStatusUpdate',
                 {
                   Authorization: `Bearer ${TOKEN}`,
                   otherHeader: 'foo',
@@ -944,15 +1188,16 @@ const editstatus = ({navigation, route}) => {
                                             <ButtonImage  test ={test} addImageIndex={addImageIndex} imagePengerjaan = {imagePengerjaan} Image ={getImage} dataImage = {imagePengerjaan} deleteImage={()=>deleteImage()} resetImage={() => resetImage()} qty = {action.image ? JSON.parse(action.image).length : 1}  />
                                         
                                             <Txt title ='Foto Alat Pengerjaan'/>
-                                        <View style={{alignItems:'center'}}>
-                                        <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
+                                     
+                                        {/* <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
                                             <Image
                                                 style={{width:'90%', height: 200}}
                                                 source={responses_tools.uri=='' || responses_tools.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : `https://simpletabadmin.ptab-vps.com/` + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
                                             />
-                                        </ImageBackground> 
+                                        </ImageBackground>  */}
                                             <Distance distanceV={10}/>
-                                            <Button
+                                            <ButtonImageTool ImageTool ={getImageTool} addImageToolIndex={addImageToolIndex} image_tool = {responses_tools} deleteImageTool={()=>deleteImageTool()} resetImageTool={() => resetImageTool() } qty = {action.image_tools ? JSON.parse(action.image_tools).length : 1}  />
+                                            {/* <Button
                                                 onPress={() => 
                                                     
                                                     Alert.alert(
@@ -1010,8 +1255,8 @@ const editstatus = ({navigation, route}) => {
                                                 width="80%"
                                                 backgroundColor='#1DA0E0'
                                                 icon = {<FontAwesomeIcon icon={faCamera} color='#ffffff'/>}
-                                            />
-                                        </View>
+                                            /> */}
+                                        
                                         </View>
                                         }
                                     {form.status == 'close' &&

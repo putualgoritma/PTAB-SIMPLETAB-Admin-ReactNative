@@ -35,7 +35,7 @@
       const actionsCreate = (data, token) => Post('/api/close/admin/actions', false, data, token);
       const actionsStaffStore = (data, token) => Post('/api/close/admin/actionStaffStore', false, data, token);
       const customerList =(data, token) => Post(`/api/close/admin/customer/list`, false, data, token)
-      const ticketList =(data, token) => Post(`/api/close/admin/ticket/list`, false, data, token)
+      const ticketList =(data, token) => Post(`/api/close/admin1/ticket/list`, false, data, token)
       const actions =(data, token) => Post(`/api/close/admin/actionlists`, false, data, token)
       const categorygroupList =(data, token) => Post(`/api/close/admin/category-groups/list`, false, data, token)
       const categorytypeList =(data, token) => Post(`/api/close/admin/category-types/list`, false, data, token)
@@ -49,7 +49,7 @@
       const ticketsClose = (data, token) => Post(`/api/close/admin/ticket-close`, false, data, token);
 
       const actionDetail =(data, token) => Post(`/api/close/admin/actiondetail`, false, data, token)
-      const ticketDetail =(data, token) => Post(`/api/close/admin/ticket-detail`, false, data, token)
+      const ticketDetail =(data, token) => Post(`/api/close/admin1/ticket-detail`, false, data, token)
       // PUT
       const customerEdit = (data, token) => Put(`/api/close/admin/customers/${data.id}`, false, data, token);
       const categoriesEdit = (data, token) => Put(`/api/close/admin/categories/${data.id}`, false, data, token);

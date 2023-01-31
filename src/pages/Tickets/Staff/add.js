@@ -43,7 +43,7 @@ const Aksi =(props) => {
 const AddStaff=({navigation, route})=>{
 
     const [loading, setLoading] = useState(true)
-    const tableHead = ['NO', 'Nama', 'No. Hp', 'Aksi'];
+    const tableHead = ['NO','Unit Kerja' ,'Nama', 'No. Hp', 'Aksi'];
     const TOKEN = useSelector((state) => state.TokenReducer);
     const [tableNo, setTableNo] = useState()
     const [tableData, setTableData] = useState()
@@ -71,8 +71,10 @@ const AddStaff=({navigation, route})=>{
                 // console.log(Object.keys(result.data[index]));
                 no[index] = index + 1;
                 data[index] = [
+                    item.work_unit_name,
                     item.name,
                     item.phone,
+                   
                     [<Aksi 
                             action_staffs_list = {result.data.action_staff_lists}
                             action_staffs = {result.data.action_staffs}
@@ -128,7 +130,7 @@ const AddStaff=({navigation, route})=>{
                         {staffs &&  
                              <View style={{height : '85%'}} >
                                 <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                                    <Row data={tableHead} flexArr={[1,2, 2, 2]} style={styles.head} textStyle={styles.text}/>
+                                    <Row data={tableHead} flexArr={[1,2, 2, 2,2]} style={styles.head} textStyle={styles.text}/>
                                 </Table>
              
                                 {/*  table data */}
@@ -136,7 +138,7 @@ const AddStaff=({navigation, route})=>{
                                     <Table borderStyle={{borderWidth: 1, borderColor:'#C1C0B9'}}>
                                         <TableWrapper style={styles.wrapper}>
                                             <Col data={tableNo} style={styles.no} heightArr={[80]} textStyle={styles.text}/>
-                                            <Rows data={tableData} flexArr={[2,2, 2]} style={styles.row} textStyle={styles.text}/>
+                                            <Rows data={tableData} flexArr={[2,2,2, 2]} style={styles.row} textStyle={styles.text}/>
                                         </TableWrapper>
                                     </Table>       
                                 </ScrollView>
