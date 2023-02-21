@@ -43,7 +43,7 @@ const Aksi =(props) => {
 const AddStaff=({navigation, route})=>{
 
     const [loading, setLoading] = useState(true)
-    const tableHead = ['NO','Unit Kerja' ,'Nama', 'No. Hp', 'Aksi'];
+    const tableHead = ['NO','Unit Kerja' ,'Nama', 'No. Hp', 'jml tidakan', 'Aksi'];
     const TOKEN = useSelector((state) => state.TokenReducer);
     const [tableNo, setTableNo] = useState()
     const [tableData, setTableData] = useState()
@@ -74,6 +74,7 @@ const AddStaff=({navigation, route})=>{
                     item.work_unit_name,
                     item.name,
                     item.phone,
+                    item.jumlahtindakan,
                    
                     [<Aksi 
                             action_staffs_list = {result.data.action_staff_lists}
@@ -130,7 +131,7 @@ const AddStaff=({navigation, route})=>{
                         {staffs &&  
                              <View style={{height : '85%'}} >
                                 <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                                    <Row data={tableHead} flexArr={[1,2, 2, 2,2]} style={styles.head} textStyle={styles.text}/>
+                                    <Row data={tableHead} flexArr={[1,2, 2,2, 2,2]} style={styles.head} textStyle={styles.text}/>
                                 </Table>
              
                                 {/*  table data */}
@@ -138,7 +139,7 @@ const AddStaff=({navigation, route})=>{
                                     <Table borderStyle={{borderWidth: 1, borderColor:'#C1C0B9'}}>
                                         <TableWrapper style={styles.wrapper}>
                                             <Col data={tableNo} style={styles.no} heightArr={[80]} textStyle={styles.text}/>
-                                            <Rows data={tableData} flexArr={[2,2,2, 2]} style={styles.row} textStyle={styles.text}/>
+                                            <Rows data={tableData} flexArr={[2,2,2,2, 2]} style={styles.row} textStyle={styles.text}/>
                                         </TableWrapper>
                                     </Table>       
                                 </ScrollView>
