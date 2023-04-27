@@ -73,7 +73,7 @@ const ViewTicket =({navigation, route})=>{
 
         //   console.log('test23 '+JSON.stringify(result.data.action[0].image))
 setCustomer(result.data.customer.namapelanggan)
-setAlamat(result.data.customer.alamat)
+setAlamat(result.data.address != '' ? result.data.address :result.data.customer.alamat)
 setCategory(result.data.category.name)
 setFotoalat(result.fotoalat)
 setFotokeluhan(result.fotokeluhan)
@@ -168,7 +168,7 @@ result.fotoalat != null && result.fotoalat != null && result.fotoalat.map((item,
 
             //   console.log('test23 '+JSON.stringify(result.data.action[0].image))
 setCustomer(result.data.customer.namapelanggan)
-setAlamat(result.data.customer.alamat)
+setAlamat(result.data.address != '' ? result.data.address :result.data.customer.alamat)
 setCategory(result.data.category.name)
 setFotoalat(result.fotoalat)
 setFotokeluhan(result.fotokeluhan)

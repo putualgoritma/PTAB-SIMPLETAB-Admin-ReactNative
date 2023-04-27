@@ -45,6 +45,7 @@ const SelectCustomer = ({navigation, route}) => {
         lng :   '',
         customer_id :   '',
         dapertement_id :'',
+        alamat :'',
     })
     var resetData = false;
 
@@ -148,7 +149,8 @@ const SelectCustomer = ({navigation, route}) => {
                         onPress={() => {setForm({
                             ...route.params.ticket,
                             customer_id : item.nomorrekening,
-                            customer_name : item.namapelanggan
+                            customer_name : item.namapelanggan,
+                            alamat : item.alamat
                         }); console.log('test'+item.nomorrekening)}}
                     />
                 </View>

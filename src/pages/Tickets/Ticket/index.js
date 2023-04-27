@@ -211,9 +211,9 @@ const Ticket = ({ navigation }) => {
                             <TextInfo title='Tanggal' item={item.created_at} />
                             <TextInfo title='Nama' item={item.customer.namapelanggan + '-' + item.customer_id} />
                             <TextInfo title='Telfon' item={item.customer.telp} />
-                            {item.customer_id !="99900001" &&
-                            <TextInfo title='Alamat' item={item.customer.alamat} />
-                            }
+                            {/* {item.customer_id !="99900001" && */}
+                            <TextInfo title='Alamat' item={item.address != '' ? item.address :item.customer.alamat} />
+                            {/* } */}
                             
                             <TextInfo title='Code' item={item.code } />
                             <TextInfo title='Kategori' item={item.category.name} />

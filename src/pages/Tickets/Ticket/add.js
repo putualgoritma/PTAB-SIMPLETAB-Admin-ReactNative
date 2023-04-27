@@ -127,6 +127,7 @@ const AddTicket = ({ navigation, route }) => {
         lng: formParams.lng ? formParams.lng : '',
         customer_id: formParams.customer_id ? formParams.customer_id : '',
         dapertement_id: USER.dapertement_id,
+        address: formParams.alamat ? formParams.alamat : '',
     })
 
     const [image, setImage] = useState({
@@ -209,6 +210,7 @@ const AddTicket = ({ navigation, route }) => {
                 lng: formParams.lng ? formParams.lng : '',
                 customer_id: formParams.customer_id ? formParams.customer_id : '',
                 dapertement_id: USER.dapertement_id,
+                address: formParams.alamat ? formParams.alamat : '',
             })
         }
     }, [isFocused])
@@ -686,6 +688,7 @@ const AddTicket = ({ navigation, route }) => {
                                             onPress={() => handleChecked('customer_id', defcustomer_id, 'noncustomer')}
                                             color='#087CDB'
                                         />
+                                        
                                         <Txt title="Non Pelanggan" />
 
                                     </View>
@@ -696,6 +699,8 @@ const AddTicket = ({ navigation, route }) => {
                                             <TouchableOpacity style={styles.btnPelanggan} onPress={() => navigation.navigate('SelectCustomer', { ticket: form })}>
                                                 <Text style={{ color: '#918F8FFF' }}>{formParams.customer_name ? formParams.customer_name : 'Pilih Pelanggan'}</Text>
                                             </TouchableOpacity>
+                                            <Txt title='Alamat' />
+                                    <TxtArea value={form.address} placeholder='Masukan Alamat' onChangeText={(item) => handleForm('address', item)} />
                                         </>
                                     }
 
@@ -707,9 +712,12 @@ const AddTicket = ({ navigation, route }) => {
                                                 editable={false}
                                                 value={defcustomer_id}
                                             />
+                                            <Txt title='Alamat' />
+                                    <TxtArea placeholder='Masukan Alamat' onChangeText={(item) => handleForm('address', item)} />
                                         </>
                                     }
 
+                                    
 
                                     <Txt title='Kategori' />
                                     {categories &&
