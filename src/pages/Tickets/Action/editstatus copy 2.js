@@ -63,7 +63,7 @@ const ButtonImage = props => {
                       uri:
                         props.imagePengerjaan[index].from == 'local'
                           ? props.imagePengerjaan[index].uri
-                          : `https://simpletabadmin.ptab-vps.com/` +
+                          : `/` +
                             `${String(props.imagePengerjaan[index].uri).replace(
                               'public/',
                               '',
@@ -202,7 +202,7 @@ const ButtonImageDone = props => {
                     uri:
                       props.image_done[indexdone].from == 'local'
                         ? props.image_done[indexdone].uri
-                        : `https://simpletabadmin.ptab-vps.com/` +
+                        : `/` +
                           `${String(props.image_done[indexdone].uri).replace(
                             'public/',
                             '',
@@ -342,7 +342,7 @@ const ButtonImageTool = props => {
                     uri:
                       props.image_tool[indexTool].from == 'local'
                         ? props.image_tool[indexTool].uri
-                        : `https://simpletabadmin.ptab-vps.com/` +
+                        : `/` +
                           `${String(props.image_tool[indexTool].uri).replace(
                             'public/',
                             '',
@@ -464,13 +464,14 @@ const ButtonImageTool = props => {
   );
 };
 
+// ini status
 const editstatus = ({navigation, route}) => {
   const image = require('../../../assets/img/BackgroundInput.png');
   const action = route.params.item;
   const USER = useSelector(state => state.UserReducer);
   const TOKEN = useSelector(state => state.TokenReducer);
   const [test, setTest] = useState('halo 1 ');
-  const [imgDone, setImgDone] = useState([]);
+  const [dataQ, setDataQ] = useState([]);
   const [countImagePengerjaan, setcountImagePengerjaan] = useState('0');
   const [imagePengerjaan, setImagePengerjaan] = useState(
     action.image
@@ -813,50 +814,6 @@ const editstatus = ({navigation, route}) => {
     ]);
   };
 
-  const upImage = async (img, i) => {
-    await RNFetchBlob.fetch(
-      'POST',
-      'https://simpletabadmin.ptab-vps.com/api/close/admin/uploadImage',
-      {
-        Authorization: `Bearer ${TOKEN}`,
-        otherHeader: 'foo',
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-      [
-        {
-          name: 'image_done',
-          filename: img.fileName,
-          data: img.base64,
-        },
-        {
-          name: 'i',
-          data: JSON.stringify(i),
-        },
-        {
-          name: 'action_id',
-          data: JSON.stringify(form.action_id),
-        },
-      ],
-    )
-      .then(result => {
-        setLoading(false);
-        // alert('tsss3');
-        let data = JSON.parse(result.data);
-        // setLoading(false);
-        setImgDone([...imgDone, data.image]);
-        // console.log('ini data 2 ', images);
-        // alert(data.message);
-        // navigation.navigate('Action');
-      })
-      .catch(e => {
-        // alert(JSON.stringify(e));
-        upImage(img, i);
-        // console.log(e);
-        // setLoading(false);
-      });
-  };
-
   const getImageDone = index => {
     Alert.alert('Bukti Foto', `Galery atau Camera? `, [
       {
@@ -871,10 +828,7 @@ const editstatus = ({navigation, route}) => {
             },
             response => {
               if (response.assets) {
-                setLoading(true);
                 let dataImage = response.assets[0];
-                console.log(response.assets[0]);
-                let i = 1;
                 const initialState = responses_done.map(obj => obj);
                 dataImage.from = 'local';
                 // setResponses([...responses, dataImage])
@@ -884,20 +838,13 @@ const editstatus = ({navigation, route}) => {
                   // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
                   // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
                   // setResponses([...responses])
-                  i = index + 1;
+
                   setResponsesDone(initialState);
                   setTest('Halo 2');
                 } else {
                   setResponsesDone([...responses_done, dataImage]);
                   // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
                 }
-
-                // menambah ke server start
-
-                // alert('hgfd');
-
-                upImage(response.assets[0], i);
-                // menambah ke server end
               }
             },
           ),
@@ -914,10 +861,7 @@ const editstatus = ({navigation, route}) => {
             },
             response => {
               if (response.assets) {
-                setLoading(true);
                 let dataImage = response.assets[0];
-                // console.log(dataImage);
-                let i = 1;
                 const initialState = responses_done.map(obj => obj);
                 dataImage.from = 'local';
                 // setResponses([...responses, dataImage])
@@ -927,19 +871,13 @@ const editstatus = ({navigation, route}) => {
                   // setImagePengerjaan([...imagePengerjaan, imagePengerjaan[index] = dataImage])
                   // setImagePengerjaanUri([...imagePengerjaanUri, imagePengerjaanUri[index] = dataImage.uri])
                   // setResponses([...responses])
-                  i = index + 1;
+
                   setResponsesDone(initialState);
                   setTest('Halo 2');
                 } else {
                   setResponsesDone([...responses_done, dataImage]);
                   // setImagePengerjaanUri([...imagePengerjaanUri, dataImage.uri])
                 }
-
-                // menambah ke server start
-
-                upImage(response.assets[0], i);
-
-                // menambah ke server end
               }
             },
           ),
@@ -1070,11 +1008,6 @@ const editstatus = ({navigation, route}) => {
         responses_done.filter((item, index) => index !== lastIndex),
       );
     }
-
-    if (imgDone.length > 1) {
-      const lastIndex = imgDone.length - 1;
-      setImgDone(imgDone.filter((item, index) => index !== lastIndex));
-    }
   };
 
   const deleteImageTool = () => {
@@ -1156,7 +1089,7 @@ const editstatus = ({navigation, route}) => {
     let dataQtyImage = 1;
     let sendData = false;
     if (form.action_id != '' && form.memo != '' && response_prework.uri != '') {
-      setLoading(true);
+      // setLoading(true);
       dataUpload = [
         {
           name: 'form',
@@ -1297,16 +1230,21 @@ const editstatus = ({navigation, route}) => {
         }
       } else {
         // alert('test5');
+        dataUpload.push({
+          name: 'countImageDone',
+          data: JSON.stringify(50),
+        });
+
         let dataQtyImageDone = 1;
         // responses_tools.length >= 1 && responses_tools.length <= 3
-        if (responses_done.length >= 2 && responses_done.length <= 6) {
-          for (let index = 0; index < responses_done.length; index++) {
-            if (responses_done[index].base64) {
+        if (responses_done.length >= 2 && responses_done.length <= 50) {
+          for (let index = 0; index < 50; index++) {
+            if (responses_done[0].base64) {
               // console.log('abc test '+responses_tools.base64)
               dataUpload.push({
                 name: 'image_done' + dataQtyImageDone,
-                filename: responses_done[index].fileName,
-                data: responses_done[index].base64,
+                filename: responses_done[0].fileName,
+                data: responses_done[0].base64,
               });
 
               dataQtyImageDone++;
@@ -1315,14 +1253,13 @@ const editstatus = ({navigation, route}) => {
               setLoading(false);
               break;
             }
+
+            if (dataQtyImageDone >= 50) {
+              // dataUpload
+              // sendTo();
+              setDataQ(dataUpload);
+            }
           }
-
-          dataUpload.push({
-            name: 'countImageDone',
-            data: JSON.stringify(responses_done.length),
-          });
-
-          sendData = true;
         } else {
           alert('Foto Setelah Pengerjaan Harus 2 - 6');
           setLoading(false);
@@ -1336,57 +1273,98 @@ const editstatus = ({navigation, route}) => {
       setLoading(false);
     }
 
-    if (sendData) {
-      // console.log('data test '+dataUpload[0][0])
+    // if (sendData) {
+    //   // console.log('data test '+dataUpload[0][0])
 
-      // console.log('abcde test '+imagePengerjaan.length)
-      RNFetchBlob.fetch(
-        'POST',
-        'https://simpletabadmin.ptab-vps.com/api/close/admin1/actionStatusUpdate',
-        {
-          Authorization: `Bearer ${TOKEN}`,
-          otherHeader: 'foo',
-          Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
-        },
-        dataUpload,
-      )
-        .then(result => {
-          setLoading(false);
-          let data = JSON.parse(result.data);
-          // console.log(result);
-          alert(data.message);
-          navigation.navigate('Action');
-        })
-        .catch(e => {
-          // console.log(e);
-          setLoading(false);
-        });
-    }
+    //   // console.log('abcde test '+imagePengerjaan.length)
+    //   RNFetchBlob.fetch(
+    //     'POST',
+    //     'https://simpletabadmin.ptab-vps.com/api/close/admin1/actionStatusUpdate',
+    //     {
+    //       Authorization: `Bearer ${TOKEN}`,
+    //       otherHeader: 'foo',
+    //       Accept: 'application/json',
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //     dataUpload,
+    //   )
+    //     .then(result => {
+    //       setLoading(false);
+    //       let data = JSON.parse(result.data);
+    //       // console.log(result);
+    //       alert(data.message);
+    //       navigation.navigate('Action');
+    //     })
+    //     .catch(e => {
+    //       // console.log(e);
+    //       setLoading(false);
+    //     });
+    // }
     // setLoading(false)
     console.log(dataUpload);
   };
 
-  const uploadimgDone = () => {
-    setLoading(true);
-    let dataUpload = [
-      {
-        name: 'action_id',
-        data: JSON.stringify(form.action_id),
-      },
-      {
-        name: 'status',
-        data: form.status,
-      },
-      {
-        name: 'memo',
-        data: form.memo,
-      },
-      {name: 'imgDone', data: JSON.stringify(imgDone)},
-    ];
+  const sendTo = () => {
+    // alert('tess');
+    console.log('tesss', dataQ);
     RNFetchBlob.fetch(
       'POST',
-      'https://simpletabadmin.ptab-vps.com/api/close/admin/actionStatusUpdateDone',
+      'https://simpletabadmin.ptab-vps.com/api/close/admin1/actionStatusUpdate',
+      {
+        Authorization: `Bearer ${TOKEN}`,
+        otherHeader: 'foo',
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+      dataQ,
+    )
+      .then(result => {
+        setLoading(false);
+        let data = JSON.parse(result.data);
+        // console.log(result);
+        alert(data.message);
+        navigation.navigate('Action');
+      })
+      .catch(e => {
+        // console.log(e);
+        setLoading(false);
+      });
+  };
+
+  async function uploadImage() {
+    let dataUpload = [];
+    let dataQtyImageDone = 1;
+    // responses_tools.length >= 1 && responses_tools.length <= 3
+    if (responses_done.length >= 2 && responses_done.length <= 50) {
+      for (let index = 0; index < 50; index++) {
+        if (responses_done[0].base64) {
+          // console.log('abc test '+responses_tools.base64)
+          dataUpload.push({
+            name: 'image_done[]',
+            filename: responses_done[0].fileName,
+            data: responses_done[0].base64,
+          });
+
+          dataQtyImageDone++;
+        } else {
+          alert('image no ' + dataQtyImageDone + ' tidak ditemukan');
+          setLoading(false);
+          break;
+        }
+      }
+
+      // dataUpload.push({
+      //   name: 'countImageDone',
+      //   data: JSON.stringify(responses_done.length),
+      // });
+    } else {
+      alert('Foto Setelah Pengerjaan Harus 2 - 6');
+      setLoading(false);
+    }
+
+    RNFetchBlob.fetch(
+      'POST',
+      '/api/close/admin1/actionStatusUpdate',
       {
         Authorization: `Bearer ${TOKEN}`,
         otherHeader: 'foo',
@@ -1398,19 +1376,17 @@ const editstatus = ({navigation, route}) => {
       .then(result => {
         setLoading(false);
         let data = JSON.parse(result.data);
-        // alert('hgfd');
         // console.log(result);
-
         alert(data.message);
         navigation.navigate('Action');
-        // navigation.navigate('Action');
       })
       .catch(e => {
         // console.log(e);
-        alert('gagal !, klik ulang tombol simpan');
         setLoading(false);
       });
-  };
+
+    console.log('ini data yang akan dikirim :', dataUpload);
+  }
 
   return (
     <View style={styles.container}>
@@ -1424,7 +1400,7 @@ const editstatus = ({navigation, route}) => {
               <View style={styles.baseBoxShadow}>
                 <View style={styles.boxShadow}>
                   <Txt title="Status" />
-                  {/* <Text>Ini jumlah {responses_done.length}</Text> */}
+
                   <Select2
                     searchPlaceHolderText="Cari Status"
                     title={form.status != '' ? form.status : action.status}
@@ -1488,7 +1464,7 @@ const editstatus = ({navigation, route}) => {
                                     uri:
                                       response_prework.from == 'local'
                                         ? response_prework.uri
-                                        : `https://simpletabadmin.ptab-vps.com/` +
+                                        : `/` +
                                           `${String(
                                             response_prework.uri,
                                           ).replace(
@@ -1573,7 +1549,7 @@ const editstatus = ({navigation, route}) => {
                       {/* <ImageBackground source={require('../../../assets/img/ImageLoading.gif') } style={{width:'100%', height: 200, alignItems:'center'}} >
                                             <Image
                                                 style={{width:'90%', height: 200}}
-                                                source={responses_tools.uri=='' || responses_tools.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : `https://simpletabadmin.ptab-vps.com/` + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
+                                                source={responses_tools.uri=='' || responses_tools.uri==null ? require('../../../assets/img/ImageFoto.png'): {uri: responses_tools.from=='local' ? responses_tools.uri : `/` + `${String(responses_tools.uri).replace('public/', '')}?time="${new Date()}` }}
                                             />
                                         </ImageBackground>  */}
                       <Distance distanceV={10} />
@@ -1662,27 +1638,17 @@ const editstatus = ({navigation, route}) => {
                       />
                     </View>
                   )}
-                  {action.status != 'close' && form.status == 'close' && (
-                    <View style={{alignItems: 'center'}}>
-                      <Distance distanceV={10} />
-                      <Btn
-                        title="Simpan"
-                        onPress={() => {
-                          uploadimgDone();
-                        }}
-                      />
-                    </View>
-                  )}
-                  {action.status != 'close' && form.status != 'close' && (
-                    <View style={{alignItems: 'center'}}>
-                      <Distance distanceV={10} />
-                      <Btn
-                        title="Simpan"
-                        onPress={() => {
-                          handleAction();
-                        }}
-                      />
-                    </View>
+                  {action.status != 'close' && (
+                    <>
+                      <View style={{alignItems: 'center'}}>
+                        <Distance distanceV={10} />
+                        <Btn title="Simpan" onPress={handleAction} />
+                      </View>
+                      <View style={{alignItems: 'center'}}>
+                        <Distance distanceV={10} />
+                        <Btn title="Simpan" onPress={sendTo()} />
+                      </View>
+                    </>
                   )}
                   {/* <Btn title='Simpan' onPress={()=>console.log('data',form.status)}/> */}
                 </View>
