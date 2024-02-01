@@ -850,10 +850,9 @@ const editstatus = ({navigation, route}) => {
         // navigation.navigate('Action');
       })
       .catch(e => {
-        // alert(JSON.stringify(e));
-        upImage(img, i);
+        alert(JSON.stringify(e));
         // console.log(e);
-        // setLoading(false);
+        setLoading(false);
       });
   };
 
@@ -1069,11 +1068,6 @@ const editstatus = ({navigation, route}) => {
       setResponsesDone(
         responses_done.filter((item, index) => index !== lastIndex),
       );
-    }
-
-    if (imgDone.length > 1) {
-      const lastIndex = imgDone.length - 1;
-      setImgDone(imgDone.filter((item, index) => index !== lastIndex));
     }
   };
 
@@ -1368,7 +1362,6 @@ const editstatus = ({navigation, route}) => {
   };
 
   const uploadimgDone = () => {
-    setLoading(true);
     let dataUpload = [
       {
         name: 'action_id',
@@ -1398,16 +1391,13 @@ const editstatus = ({navigation, route}) => {
       .then(result => {
         setLoading(false);
         let data = JSON.parse(result.data);
-        // alert('hgfd');
+        alert('hgfd');
         // console.log(result);
-
         alert(data.message);
-        navigation.navigate('Action');
         // navigation.navigate('Action');
       })
       .catch(e => {
         // console.log(e);
-        alert('gagal !, klik ulang tombol simpan');
         setLoading(false);
       });
   };
@@ -1424,7 +1414,7 @@ const editstatus = ({navigation, route}) => {
               <View style={styles.baseBoxShadow}>
                 <View style={styles.boxShadow}>
                   <Txt title="Status" />
-                  {/* <Text>Ini jumlah {responses_done.length}</Text> */}
+                  <Text>Ini jumlah {responses_done.length}</Text>
                   <Select2
                     searchPlaceHolderText="Cari Status"
                     title={form.status != '' ? form.status : action.status}

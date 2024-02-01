@@ -225,6 +225,12 @@ const ButtonImageDone = props => {
             />
           </View>
         )}
+        <TouchableOpacity
+          onPress={() => {
+            props.upImage(props.image_done[indexdone].base64, indexdone);
+          }}>
+          <Text>Upload Image</Text>
+        </TouchableOpacity>
       </View>,
     );
   }
@@ -840,17 +846,18 @@ const editstatus = ({navigation, route}) => {
       ],
     )
       .then(result => {
-        setLoading(false);
-        // alert('tsss3');
+        // alert('Berhasil Menambah Image');
         let data = JSON.parse(result.data);
         // setLoading(false);
         setImgDone([...imgDone, data.image]);
+
+        setLoading(false);
         // console.log('ini data 2 ', images);
         // alert(data.message);
         // navigation.navigate('Action');
       })
       .catch(e => {
-        // alert(JSON.stringify(e));
+        alert(JSON.stringify(e));
         upImage(img, i);
         // console.log(e);
         // setLoading(false);
@@ -895,8 +902,9 @@ const editstatus = ({navigation, route}) => {
                 // menambah ke server start
 
                 // alert('hgfd');
+                // let images = imgDone;
 
-                upImage(response.assets[0], i);
+                // upImage(response.assets[0], i);
                 // menambah ke server end
               }
             },
@@ -937,7 +945,10 @@ const editstatus = ({navigation, route}) => {
 
                 // menambah ke server start
 
-                upImage(response.assets[0], i);
+                // alert('hgfd');
+                let images = imgDone;
+
+                upImage(dataImage, i);
 
                 // menambah ke server end
               }
@@ -1069,11 +1080,6 @@ const editstatus = ({navigation, route}) => {
       setResponsesDone(
         responses_done.filter((item, index) => index !== lastIndex),
       );
-    }
-
-    if (imgDone.length > 1) {
-      const lastIndex = imgDone.length - 1;
-      setImgDone(imgDone.filter((item, index) => index !== lastIndex));
     }
   };
 
@@ -1368,7 +1374,6 @@ const editstatus = ({navigation, route}) => {
   };
 
   const uploadimgDone = () => {
-    setLoading(true);
     let dataUpload = [
       {
         name: 'action_id',
@@ -1398,16 +1403,13 @@ const editstatus = ({navigation, route}) => {
       .then(result => {
         setLoading(false);
         let data = JSON.parse(result.data);
-        // alert('hgfd');
+        alert('hgfd');
         // console.log(result);
-
         alert(data.message);
-        navigation.navigate('Action');
         // navigation.navigate('Action');
       })
       .catch(e => {
         // console.log(e);
-        alert('gagal !, klik ulang tombol simpan');
         setLoading(false);
       });
   };
@@ -1424,7 +1426,7 @@ const editstatus = ({navigation, route}) => {
               <View style={styles.baseBoxShadow}>
                 <View style={styles.boxShadow}>
                   <Txt title="Status" />
-                  {/* <Text>Ini jumlah {responses_done.length}</Text> */}
+                  <Text>Ini jumlah {responses_done.length}</Text>
                   <Select2
                     searchPlaceHolderText="Cari Status"
                     title={form.status != '' ? form.status : action.status}
@@ -1659,6 +1661,7 @@ const editstatus = ({navigation, route}) => {
                         image_done={responses_done}
                         deleteImageDone={() => deleteImageDone()}
                         resetImageDone={() => resetImageDone()}
+                        upImage={upImage}
                       />
                     </View>
                   )}

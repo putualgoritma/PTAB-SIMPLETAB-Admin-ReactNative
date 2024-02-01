@@ -813,50 +813,6 @@ const editstatus = ({navigation, route}) => {
     ]);
   };
 
-  const upImage = async (img, i) => {
-    await RNFetchBlob.fetch(
-      'POST',
-      'https://simpletabadmin.ptab-vps.com/api/close/admin/uploadImage',
-      {
-        Authorization: `Bearer ${TOKEN}`,
-        otherHeader: 'foo',
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-      [
-        {
-          name: 'image_done',
-          filename: img.fileName,
-          data: img.base64,
-        },
-        {
-          name: 'i',
-          data: JSON.stringify(i),
-        },
-        {
-          name: 'action_id',
-          data: JSON.stringify(form.action_id),
-        },
-      ],
-    )
-      .then(result => {
-        setLoading(false);
-        // alert('tsss3');
-        let data = JSON.parse(result.data);
-        // setLoading(false);
-        setImgDone([...imgDone, data.image]);
-        // console.log('ini data 2 ', images);
-        // alert(data.message);
-        // navigation.navigate('Action');
-      })
-      .catch(e => {
-        // alert(JSON.stringify(e));
-        upImage(img, i);
-        // console.log(e);
-        // setLoading(false);
-      });
-  };
-
   const getImageDone = index => {
     Alert.alert('Bukti Foto', `Galery atau Camera? `, [
       {
@@ -894,9 +850,50 @@ const editstatus = ({navigation, route}) => {
 
                 // menambah ke server start
 
-                // alert('hgfd');
+                alert('hgfd');
+                let images = imgDone;
+                RNFetchBlob.fetch(
+                  'POST',
+                  'https://simpletabadmin.ptab-vps.com/api/close/admin/uploadImage',
+                  {
+                    Authorization: `Bearer ${TOKEN}`,
+                    otherHeader: 'foo',
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                  },
+                  [
+                    {
+                      name: 'image_done',
+                      filename: responses_done[0].fileName,
+                      data: responses_done[0].base64,
+                    },
+                    {
+                      name: 'i',
+                      data: JSON.stringify(i),
+                    },
+                    {
+                      name: 'action_id',
+                      data: JSON.stringify(form.action_id),
+                    },
+                  ],
+                )
+                  .then(result => {
+                    setLoading(false);
+                    // alert('tsss3');
+                    // let data = JSON.parse(result.data);
+                    setLoading(false);
+                    images.push(result.data.image);
 
-                upImage(response.assets[0], i);
+                    setImgDone(images);
+                    // console.log('ini data 2 ', images);
+                    // alert(data.message);
+                    // navigation.navigate('Action');
+                  })
+                  .catch(e => {
+                    // console.log(e);
+                    setLoading(false);
+                  });
+
                 // menambah ke server end
               }
             },
@@ -937,7 +934,51 @@ const editstatus = ({navigation, route}) => {
 
                 // menambah ke server start
 
-                upImage(response.assets[0], i);
+                alert('hgfd');
+                let images = imgDone;
+                RNFetchBlob.fetch(
+                  'POST',
+                  'https://simpletabadmin.ptab-vps.com/api/close/admin/uploadImage',
+                  {
+                    Authorization: `Bearer ${TOKEN}`,
+                    otherHeader: 'foo',
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                  },
+                  [
+                    {
+                      name: 'image_done',
+                      filename: dataImage.fileName,
+                      data: dataImage.base64,
+                    },
+                    {
+                      name: 'i',
+                      data: JSON.stringify(i),
+                    },
+                    {
+                      name: 'action_id',
+                      data: JSON.stringify(form.action_id),
+                    },
+                  ],
+                )
+                  .then(result => {
+                    setLoading(false);
+                    // alert('tsss3');
+                    let data = JSON.parse(result.data);
+                    // console.log(result.data[0]);
+
+                    if (result) {
+                      // images.push(result.data.image);
+                      setImgDone([...imgDone, data.image]);
+                    }
+                    // console.log('ini data 2 ', images);
+                    // alert(data.message);
+                    // navigation.navigate('Action');
+                  })
+                  .catch(e => {
+                    // console.log(e);
+                    setLoading(false);
+                  });
 
                 // menambah ke server end
               }
@@ -1069,11 +1110,6 @@ const editstatus = ({navigation, route}) => {
       setResponsesDone(
         responses_done.filter((item, index) => index !== lastIndex),
       );
-    }
-
-    if (imgDone.length > 1) {
-      const lastIndex = imgDone.length - 1;
-      setImgDone(imgDone.filter((item, index) => index !== lastIndex));
     }
   };
 
@@ -1368,7 +1404,6 @@ const editstatus = ({navigation, route}) => {
   };
 
   const uploadimgDone = () => {
-    setLoading(true);
     let dataUpload = [
       {
         name: 'action_id',
@@ -1376,11 +1411,11 @@ const editstatus = ({navigation, route}) => {
       },
       {
         name: 'status',
-        data: form.status,
+        data: JSON.stringify(form.status),
       },
       {
         name: 'memo',
-        data: form.memo,
+        data: JSON.stringify(form.memo),
       },
       {name: 'imgDone', data: JSON.stringify(imgDone)},
     ];
@@ -1398,16 +1433,13 @@ const editstatus = ({navigation, route}) => {
       .then(result => {
         setLoading(false);
         let data = JSON.parse(result.data);
-        // alert('hgfd');
+        alert('hgfd');
         // console.log(result);
-
         alert(data.message);
-        navigation.navigate('Action');
         // navigation.navigate('Action');
       })
       .catch(e => {
         // console.log(e);
-        alert('gagal !, klik ulang tombol simpan');
         setLoading(false);
       });
   };
@@ -1424,7 +1456,7 @@ const editstatus = ({navigation, route}) => {
               <View style={styles.baseBoxShadow}>
                 <View style={styles.boxShadow}>
                   <Txt title="Status" />
-                  {/* <Text>Ini jumlah {responses_done.length}</Text> */}
+
                   <Select2
                     searchPlaceHolderText="Cari Status"
                     title={form.status != '' ? form.status : action.status}
@@ -1662,24 +1694,13 @@ const editstatus = ({navigation, route}) => {
                       />
                     </View>
                   )}
-                  {action.status != 'close' && form.status == 'close' && (
+                  {action.status != 'close' && (
                     <View style={{alignItems: 'center'}}>
                       <Distance distanceV={10} />
                       <Btn
                         title="Simpan"
                         onPress={() => {
                           uploadimgDone();
-                        }}
-                      />
-                    </View>
-                  )}
-                  {action.status != 'close' && form.status != 'close' && (
-                    <View style={{alignItems: 'center'}}>
-                      <Distance distanceV={10} />
-                      <Btn
-                        title="Simpan"
-                        onPress={() => {
-                          handleAction();
                         }}
                       />
                     </View>
