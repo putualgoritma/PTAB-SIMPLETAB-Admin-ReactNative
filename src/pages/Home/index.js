@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import {View,ScrollView,StyleSheet,TouchableOpacity, Text} from 'react-native'
+import {View,ScrollView,StyleSheet,TouchableOpacity, Text, Image} from 'react-native'
 import {HeaderBeranda,Line,Footer,TitleMenu} from '../../component'
 import {SliderBox} from "react-native-image-slider-box";
 import {IconTiket,IconMaster,IconUsersManagement,IconSegelMeter,IconNone} from '../../assets/icon';
@@ -18,6 +18,17 @@ const Home =({navigation})=>{
     return(
         <View style={styles.container}>
             <ScrollView>
+
+            <View>
+                    <Image
+                        style={{ width: 400, height: 400 }}
+                        source={{ uri: 'https://ptab-vps.com/pdam-test/gambar/202301/12163_2023_03.jpg' }}
+                        onError={error => {
+                            console.log(error.nativeEvent);
+                         }}
+                    />
+                </View>
+
                 <HeaderBeranda/>
                     <View style={{height:200,alignItems:'center'}}>
                         <SliderBox
