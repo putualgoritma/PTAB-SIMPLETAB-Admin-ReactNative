@@ -273,7 +273,9 @@ const Ticket = ({navigation}) => {
               {item.customer_id != '99900001' && (
                 <TextInfo title="Alamat" item={item.customer.alamat} />
               )}
-
+              {item.customer_id == '99900001' && (
+                <TextInfo title="Alamat" item={item.address} />
+              )}
               <TextInfo title="Code" item={item.code} />
               <TextInfo title="Kategori" item={item.category.name} />
               <TextInfo title="Deskripsi" item={item.description} />
